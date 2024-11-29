@@ -6,6 +6,20 @@
 
 <br>
 
+## Objective
+
+Develop an enhanced FarmTech solution by integrating predictive intelligence and real-time monitoring to optimize irrigation and nutrient management. Leverage Scikit-learn for predictive modeling, Streamlit for visualization, and ESP32 for field hardware integration.
+
+## Deliverables
+- Optimized C/C++ code for ESP32.
+- Python code with Scikit-learn and Streamlit integration.
+- Screenshots and detailed documentation in the README.
+- Demonstrative video published and linked in the GitHub repository.
+
+## Tasks
+
+Access the [GitHub Project](https://github.com/users/luisfuturist/projects/4).
+
 # Nome do projeto
 
 ## Nome do grupo
