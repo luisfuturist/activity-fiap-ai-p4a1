@@ -1,0 +1,17 @@
+services:
+  oracle_db:
+    image: gvenzl/oracle-free:latest
+    container_name: oracle_container
+    environment:
+      ORACLE_PASSWORD: oracle_password
+      ORACLE_DATABASE: oracle_database
+      ORACLE_ALLOW_REMOTE: "true"
+      APP_USER: oracle_user
+      APP_USER_PASSWORD: oracle_password
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+volumes:
+  oracle_data:
