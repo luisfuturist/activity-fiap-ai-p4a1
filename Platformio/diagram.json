@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "author": "Kild Bezerra Fernandes",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -288, "left": -62.36, "attrs": {} },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd1",
+      "top": -224,
+      "left": 207.2,
+      "attrs": { "pins": "i2c" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": -278.4, "left": 191.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": -277.64, "left": 172.8, "attrs": {} },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "soilMoisture",
+      "top": -414.1,
+      "left": -182.6,
+      "attrs": { "value": "512" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "nutrientLevel",
+      "top": -298.9,
+      "left": -182.6,
+      "attrs": { "value": "512" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "irrigationLED",
+      "top": -32.4,
+      "left": 263,
+      "attrs": { "color": "green" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": -392.84, "left": -105.6, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": -326.4, "left": -211.8, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc3", "top": -277.64, "left": -105.6, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd3", "top": -211.2, "left": -202.2, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 43.2,
+      "left": 258.65,
+      "rotate": 90,
+      "attrs": { "value": "220" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd4", "top": 9.6, "left": 258.6, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "lcd1:GND", "gnd1:GND", "black", [ "h0" ] ],
+    [ "lcd1:VCC", "vcc1:VCC", "red", [ "h0" ] ],
+    [ "lcd1:SDA", "esp:21", "cyan", [ "h-96", "v67.4" ] ],
+    [ "lcd1:SCL", "esp:22", "cyan", [ "h-38.4", "v-38.1" ] ],
+    [ "soilMoisture:W1", "esp:34", "blue", [ "v0" ] ],
+    [ "nutrientLevel:W1", "esp:35", "purple", [ "v0" ] ],
+    [ "irrigationLED:anode", "esp:2", "green", [ "h50" ] ],
+    [ "irrigationLED:cathode", "gnd1:GND", "black", [ "v-50" ] ],
+    [ "soilMoisture:VCC", "vcc2:VCC", "red", [ "h37.6", "v-48" ] ],
+    [ "soilMoisture:GND", "gnd2:GND", "black", [ "h-48", "v19.2" ] ],
+    [ "nutrientLevel:VCC", "vcc3:VCC", "red", [ "h37.6", "v-57.6" ] ],
+    [ "nutrientLevel:GND", "gnd3:GND", "black", [ "h-38.4", "v19.2" ] ],
+    [ "irrigationLED:A", "r1:1", "green", [ "v0" ] ],
+    [ "r1:2", "esp:2", "blue", [ "h-86.4", "v-202.8" ] ],
+    [ "irrigationLED:C", "gnd4:GND", "green", [ "v0" ] ],
+    [ "soilMoisture:SIG", "esp:34", "blue", [ "v38.4", "h76.4", "v86.4" ] ],
+    [ "esp:35", "nutrientLevel:SIG", "blue", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
