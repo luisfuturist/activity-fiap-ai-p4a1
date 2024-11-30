@@ -35,6 +35,9 @@ void loop() {
   // Display values on LCD
   displayOnLCD(soilMoisturePercent, nutrientLevelPercent, irrigationStatus);
 
+  // Log values to Serial Monitor
+  logToSerial(soilMoisturePercent, nutrientLevelPercent, irrigationStatus);
+
   delay(1000); // Update every second
 }
 
@@ -81,4 +84,13 @@ void displayOnLCD(int soilMoisturePercent, int nutrientLevelPercent, bool irriga
   lcd.setCursor(0, 2);
   lcd.print("Irrigation: ");
   lcd.print(irrigationStatus ? "ON " : "OFF");
+}
+
+// Log values to Serial Monitor
+void logToSerial(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus) {
+  Serial.print(soilMoisturePercent);
+  Serial.print(" ");
+  Serial.print(nutrientLevelPercent);
+  Serial.print(" ");
+  Serial.println(irrigationStatus ? 100 : 0);
 }

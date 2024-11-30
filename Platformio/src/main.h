@@ -21,5 +21,6 @@ void readSensors(int &soilMoisture, int &nutrientLevel);
 int calculatePercent(int value);
 void updateIrrigationStatus(int soilMoisturePercent, bool &irrigationStatus);
 void displayOnLCD(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus);
+void logToSerial(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus);
 
 #endif // MAIN_H
