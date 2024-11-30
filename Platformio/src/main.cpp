@@ -1,47 +1,47 @@
 #include "main.h"
 
-// Instantiate the LCD
+// Instância do LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
   Serial.begin(115200);
 
-  // Initialize LCD
+  // Inicializar o LCD
   initializeLCD();
 
-  // Configure irrigation LED
+  // Configuração do LED de irrigação
   pinMode(IRRIGATION_LED_PIN, OUTPUT);
   digitalWrite(IRRIGATION_LED_PIN, LOW);
 
-  // Indicate start in Serial Monitor
+  // Mensagem inicial no monitor serial
   Serial.println("SoilMoisture NutrientLevel IrrigationStatus");
 }
 
 void loop() {
-  int soilMoisture = 0, nutrientLevel = 0;
-  int soilMoisturePercent = 0, nutrientLevelPercent = 0;
+  uint16_t soilMoisture = 0, nutrientLevel = 0;
+  uint8_t soilMoisturePercent = 0, nutrientLevelPercent = 0;
   bool irrigationStatus = false;
 
-  // Read sensor values
+  // Ler os sensores
   readSensors(soilMoisture, nutrientLevel);
 
-  // Calculate percentages
+  // Calcular os valores normalizados
   soilMoisturePercent = calculatePercent(soilMoisture);
   nutrientLevelPercent = calculatePercent(nutrientLevel);
 
-  // Update irrigation status
+  // Atualizar o status de irrigação
   updateIrrigationStatus(soilMoisturePercent, irrigationStatus);
 
-  // Display values on LCD
+  // Atualizar o LCD
   displayOnLCD(soilMoisturePercent, nutrientLevelPercent, irrigationStatus);
 
-  // Log values to Serial Monitor
+  // Registrar no monitor serial
   logToSerial(soilMoisturePercent, nutrientLevelPercent, irrigationStatus);
 
-  delay(1000); // Update every second
+  delay(1000); // Atualizar a cada segundo
 }
 
-// Initialize the LCD
+// Função para inicializar o LCD
 void initializeLCD() {
   Wire.begin(SDA_PIN, SCL_PIN);
   lcd.init();
@@ -52,25 +52,25 @@ void initializeLCD() {
   lcd.clear();
 }
 
-// Read sensor values
-void readSensors(int &soilMoisture, int &nutrientLevel) {
+// Função para ler os sensores
+void readSensors(uint16_t& soilMoisture, uint16_t& nutrientLevel) {
   soilMoisture = analogRead(SOIL_MOISTURE_PIN);
   nutrientLevel = analogRead(NUTRIENT_LEVEL_PIN);
 }
 
-// Calculate percentage (0-100%)
-int calculatePercent(int value) {
+// Função para calcular porcentagem (0-100%)
+uint8_t calculatePercent(uint16_t value) {
   return map(value, 0, 4095, 0, 100);
 }
 
-// Update irrigation status
-void updateIrrigationStatus(int soilMoisturePercent, bool &irrigationStatus) {
-  irrigationStatus = soilMoisturePercent < 30; // Example threshold
+// Função para atualizar o status de irrigação
+void updateIrrigationStatus(uint8_t soilMoisturePercent, bool& irrigationStatus) {
+  irrigationStatus = soilMoisturePercent < 30; // Limiar de 30%
   digitalWrite(IRRIGATION_LED_PIN, irrigationStatus ? HIGH : LOW);
 }
 
-// Display values on LCD
-void displayOnLCD(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus) {
+// Função para exibir no LCD
+void displayOnLCD(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus) {
   lcd.setCursor(0, 0);
   lcd.print("Soil: ");
   lcd.print(soilMoisturePercent);
@@ -86,8 +86,8 @@ void displayOnLCD(int soilMoisturePercent, int nutrientLevelPercent, bool irriga
   lcd.print(irrigationStatus ? "ON " : "OFF");
 }
 
-// Log values to Serial Monitor
-void logToSerial(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus) {
+// Função para registrar no monitor serial
+void logToSerial(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus) {
   Serial.print(soilMoisturePercent);
   Serial.print(" ");
   Serial.print(nutrientLevelPercent);

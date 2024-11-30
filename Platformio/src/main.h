@@ -5,22 +5,22 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 
-// Pin definitions
-#define SOIL_MOISTURE_PIN 34  // Analog pin for soil moisture
-#define NUTRIENT_LEVEL_PIN 35 // Analog pin for nutrient levels
-#define IRRIGATION_LED_PIN 2  // Digital pin for irrigation status (LED)
-#define SDA_PIN 21            // SDA pin for I2C
-#define SCL_PIN 22            // SCL pin for I2C
+// Definições de pinos
+#define SOIL_MOISTURE_PIN 34  // Pino analógico para umidade do solo
+#define NUTRIENT_LEVEL_PIN 35 // Pino analógico para níveis de nutrientes
+#define IRRIGATION_LED_PIN 2  // Pino digital para status de irrigação (LED)
+#define SDA_PIN 21            // Pino SDA do I2C
+#define SCL_PIN 22            // Pino SCL do I2C
 
-// LCD instance
+// Variáveis globais
 extern LiquidCrystal_I2C lcd;
 
-// Function prototypes
+// Declarações de funções
 void initializeLCD();
-void readSensors(int &soilMoisture, int &nutrientLevel);
-int calculatePercent(int value);
-void updateIrrigationStatus(int soilMoisturePercent, bool &irrigationStatus);
-void displayOnLCD(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus);
-void logToSerial(int soilMoisturePercent, int nutrientLevelPercent, bool irrigationStatus);
+void readSensors(uint16_t& soilMoisture, uint16_t& nutrientLevel);
+uint8_t calculatePercent(uint16_t value);
+void updateIrrigationStatus(uint8_t soilMoisturePercent, bool& irrigationStatus);
+void displayOnLCD(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus);
+void logToSerial(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus);
 
 #endif // MAIN_H
