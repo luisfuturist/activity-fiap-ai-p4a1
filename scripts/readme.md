@@ -10,7 +10,7 @@ Este projeto utiliza **Python**, **PostgreSQL** e **SQLAlchemy** para gerenciar 
 - [Passo 2: Instalar Dependências](#passo-2-instalar-dependências)
 - [Passo 3: Configurar e Inicializar o Banco de Dados](#passo-3-configurar-e-inicializar-o-banco-de-dados)
 - [Passo 4: Inicializar o Banco de Dados](#passo-4-inicializar-o-banco-de-dados)
-- [Modelagem Entidade-Relacionamento (MER) - FarmTech Database](#modelagem-entidade-relacionamento-mer---farmtech-database)
+- [Modelagem Entidade-Relacionamento (MER)](#modelagem-entidade-relacionamento-mer)
 - [Problemas Comuns](#problemas-comuns)
 - [Contribuindo](#contribuindo)
 - [Licença](#licença)
@@ -115,7 +115,7 @@ Database and tables created, initial data added successfully.
 
 ---
 
-## Modelagem Entidade-Relacionamento (MER) - FarmTech Database
+## Modelagem Entidade-Relacionamento (MER)
 
 Esta é a modelagem das entidades e seus relacionamentos para o banco de dados utilizado no sistema de monitoramento agrícola.
 
