@@ -1,169 +1,148 @@
-import sqlite3
+from sqlalchemy import create_engine, Column, Integer, String, Float, Date, Boolean, Text, ForeignKey, TIMESTAMP
+from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+
+# Database connection details
+DATABASE_URL = "postgresql://fiap_p4a1:fiap_p4a1@localhost:5432/fiap_p4a1"
+
+# Base class for SQLAlchemy ORM
+Base = declarative_base()
+
+# Setup the database engine and session
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+
+# Definição das tabelas como classes do SQLAlchemy
+
+
+class AreaPlantio(Base):
+    __tablename__ = "Area_Plantio"
+    id_area = Column(Integer, primary_key=True, autoincrement=True)
+    nome_area = Column(String, nullable=False)
+    tamanho_hectares = Column(Float)
+    cultura = Column(String)
+    data_plantio = Column(Date)
+
+
+class TipoSensor(Base):
+    __tablename__ = "Tipo_Sensor"
+    id_tipo = Column(Integer, primary_key=True, autoincrement=True)
+    nome = Column(String, nullable=False)
+    descricao = Column(String)
+
+
+class Sensor(Base):
+    __tablename__ = "Sensor"
+    id_sensor = Column(Integer, primary_key=True, autoincrement=True)
+    id_tipo = Column(Integer, ForeignKey("Tipo_Sensor.id_tipo"), nullable=False)
+    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"), nullable=False)
+    nome_sensor = Column(String, nullable=False)
+    tipo_sensor = relationship("TipoSensor")
+    area_plantio = relationship("AreaPlantio")
+
+
+class MedicaoSensor(Base):
+    __tablename__ = "Medicao_Sensor"
+    id_medicao = Column(Integer, primary_key=True, autoincrement=True)
+    id_sensor = Column(Integer, ForeignKey("Sensor.id_sensor"), nullable=False)
+    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"), nullable=False)
+    valor = Column(Float)
+    data_hora = Column(TIMESTAMP, default=func.current_timestamp())
+    condicoes_ambiente = Column(String)
+    sensor = relationship("Sensor")
+    area = relationship("AreaPlantio")
+
+
+class ModeloML(Base):
+    __tablename__ = "Modelo_ML"
+    id_modelo = Column(Integer, primary_key=True, autoincrement=True)
+    nome_modelo = Column(String, nullable=False)
+    tipo_modelo = Column(String, nullable=False)
+    data_treinamento = Column(TIMESTAMP, default=func.current_timestamp())
+    parametros_modelo = Column(Text)
+    biblioteca_ml = Column(String, nullable=False)
+
+
+class MetricasModelo(Base):
+    __tablename__ = "Metricas_Modelo"
+    id_metrica = Column(Integer, primary_key=True, autoincrement=True)
+    id_modelo = Column(Integer, ForeignKey("Modelo_ML.id_modelo"))
+    metrica = Column(String, nullable=False)
+    valor_metrica = Column(Float)
+    modelo_ml = relationship("ModeloML")
+
+
+class RecomendacaoIrrigacao(Base):
+    __tablename__ = "Recomendacao_Irrigacao"
+    id_recomendacao = Column(Integer, primary_key=True, autoincrement=True)
+    id_modelo = Column(Integer, ForeignKey("Modelo_ML.id_modelo"))
+    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"))
+    data_recomendacao = Column(TIMESTAMP, default=func.current_timestamp())
+    necessidade_irrigacao = Column(Boolean)
+    modelo_ml = relationship("ModeloML")
+    area = relationship("AreaPlantio")
+
+
+class HistoricoIrrigacao(Base):
+    __tablename__ = "Historico_Irrigacao"
+    id_irrigacao = Column(Integer, primary_key=True, autoincrement=True)
+    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"))
+    id_recomendacao = Column(Integer, ForeignKey("Recomendacao_Irrigacao.id_recomendacao"))
+    hora_inicio = Column(TIMESTAMP)
+    hora_fim = Column(TIMESTAMP)
+    duracao_minutos = Column(Float)
+    volume_agua = Column(Float)
+    area = relationship("AreaPlantio")
+    recomendacao = relationship("RecomendacaoIrrigacao")
+
+
+# Inicialização do banco de dados
+def init_db():
+    Base.metadata.create_all(engine)
+
+
+# População inicial do banco de dados
+def populate_db():
+    session = Session()
+    try:
+        # Dados iniciais para AreaPlantio
+        areas = [
+            AreaPlantio(nome_area="Setor A", tamanho_hectares=10.5, cultura="Milho", data_plantio="2024-01-15"),
+            AreaPlantio(nome_area="Setor B", tamanho_hectares=8.2, cultura="Soja", data_plantio="2024-02-01"),
+        ]
+        session.add_all(areas)
+
+        # Dados iniciais para TipoSensor
+        tipos_sensores = [
+            TipoSensor(nome="K", descricao="Sensor para medir o nível de Potássio"),
+            TipoSensor(nome="P", descricao="Sensor para medir o nível de Fósforo"),
+            TipoSensor(nome="pH", descricao="Sensor para medir o nível de pH do solo"),
+            TipoSensor(nome="Umidade", descricao="Sensor para medir a umidade do solo"),
+        ]
+        session.add_all(tipos_sensores)
+
+        # Dados iniciais para Sensor
+        sensores = [
+            Sensor(id_tipo=1, id_area=1, nome_sensor="Sensor K - Setor A"),
+            Sensor(id_tipo=2, id_area=1, nome_sensor="Sensor P - Setor A"),
+            Sensor(id_tipo=3, id_area=1, nome_sensor="Sensor pH - Setor A"),
+            Sensor(id_tipo=4, id_area=1, nome_sensor="Sensor Umidade - Setor A"),
+            Sensor(id_tipo=1, id_area=2, nome_sensor="Sensor K - Setor B"),
+            Sensor(id_tipo=2, id_area=2, nome_sensor="Sensor P - Setor B"),
+            Sensor(id_tipo=3, id_area=2, nome_sensor="Sensor pH - Setor B"),
+            Sensor(id_tipo=4, id_area=2, nome_sensor="Sensor Umidade - Setor B"),
+        ]
+        session.add_all(sensores)
+
+        session.commit()
+        print("Banco de dados populado com sucesso!")
+    except Exception as e:
+        session.rollback()
+        print(f"Erro ao popular o banco de dados: {e}")
+    finally:
+        session.close()
+
 
 if __name__ == "__main__":
-    # Conectar ao banco de dados (ou criar um novo arquivo de banco de dados local)
-    conn = sqlite3.connect("src/farmtech.db")
-    cursor = conn.cursor()
-
-    # Criar tabela de Área de Plantio
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Area_Plantio (
-            id_area INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome_area TEXT NOT NULL,
-            tamanho_hectares REAL,
-            cultura TEXT,
-            data_plantio DATE
-        );
-        """
-    )
-
-    # Inserir áreas iniciais de plantio
-    cursor.executemany(
-        """
-        INSERT INTO Area_Plantio (nome_area, tamanho_hectares, cultura, data_plantio)
-        VALUES (?, ?, ?, ?)
-        """,
-        [
-            ("Setor A", 10.5, "Milho", "2024-01-15"),
-            ("Setor B", 8.2, "Soja", "2024-02-01"),
-        ],
-    )
-
-    # Criar a tabela Tipo_Sensor
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Tipo_Sensor (
-            id_tipo INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            descricao TEXT
-        );
-        """
-    )
-
-    # Criar a tabela Sensor
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Sensor (
-            id_sensor INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_tipo INTEGER NOT NULL,
-            id_area INTEGER NOT NULL,
-            nome_sensor TEXT NOT NULL,
-            FOREIGN KEY (id_tipo) REFERENCES Tipo_Sensor(id_tipo),
-            FOREIGN KEY (id_area) REFERENCES Area_Plantio(id_area)
-        );
-        """
-    )
-
-    # Criar a tabela Medicao_Sensor
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Medicao_Sensor (
-            id_medicao INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_sensor INTEGER NOT NULL,
-            id_area INTEGER NOT NULL,
-            valor REAL,
-            data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            condicoes_ambiente TEXT,
-            FOREIGN KEY (id_sensor) REFERENCES Sensor(id_sensor),
-            FOREIGN KEY (id_area) REFERENCES Area_Plantio(id_area)
-        );
-        """
-    )
-
-    # Tabela de Modelos de Machine Learning
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Modelo_ML (
-            id_modelo INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome_modelo TEXT NOT NULL,
-            tipo_modelo TEXT NOT NULL,  # Classificação, Regressão, etc
-            data_treinamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            parametros_modelo TEXT,  # Armazenar hiperparâmetros serializados
-            biblioteca_ml TEXT NOT NULL  # Scikit-learn, TensorFlow, etc
-        );
-        """
-    )
-
-    # Tabela de Métricas do Modelo
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Metricas_Modelo (
-            id_metrica INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_modelo INTEGER,
-            metrica TEXT NOT NULL,  # Accuracy, F1-Score, MAE, etc
-            valor_metrica REAL,
-            FOREIGN KEY (id_modelo) REFERENCES Modelo_ML(id_modelo)
-        );
-        """
-    )
-
-    # Tabela de Recomendação de Irrigação
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Recomendacao_Irrigacao (
-            id_recomendacao INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_modelo INTEGER,
-            id_area INTEGER,
-            data_recomendacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            necessidade_irrigacao BOOLEAN,
-            FOREIGN KEY (id_modelo) REFERENCES Modelo_ML(id_modelo),
-            FOREIGN KEY (id_area) REFERENCES Area_Plantio(id_area)
-        );
-        """
-    )
-
-    # Tabela de Histórico de Irrigação
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS Historico_Irrigacao (
-            id_irrigacao INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_area INTEGER,
-            id_recomendacao INTEGER,
-            hora_inicio TIMESTAMP,
-            hora_fim TIMESTAMP,
-            duracao_minutos REAL,
-            volume_agua REAL,
-            FOREIGN KEY (id_area) REFERENCES Area_Plantio(id_area),
-            FOREIGN KEY (id_recomendacao) REFERENCES Recomendacao_Irrigacao(id_recomendacao)
-        );
-        """
-    )
-
-    # Inserir dados iniciais na tabela Tipo_Sensor
-    cursor.executemany(
-        """
-        INSERT INTO Tipo_Sensor (nome, descricao)
-        VALUES (?, ?)
-        """,
-        [
-            ("K", "Sensor para medir o nível de Potássio"),
-            ("P", "Sensor para medir o nível de Fósforo"),
-            ("pH", "Sensor para medir o nível de pH do solo"),
-            ("Umidade", "Sensor para medir a umidade do solo"),
-        ],
-    )
-
-    # Inserir sensores iniciais na tabela Sensor
-    cursor.executemany(
-        """
-        INSERT INTO Sensor (id_tipo, id_area, nome_sensor)
-        VALUES (?, ?, ?)
-        """,
-        [
-            (1, 1, "Sensor K - Setor A"),
-            (2, 1, "Sensor P - Setor A"),
-            (3, 1, "Sensor pH - Setor A"),
-            (4, 1, "Sensor Umidade - Setor A"),
-            (1, 2, "Sensor K - Setor B"),
-            (2, 2, "Sensor P - Setor B"),
-            (3, 2, "Sensor pH - Setor B"),
-            (4, 2, "Sensor Umidade - Setor B"),
-        ],
-    )
-
-    # Salvar as alterações e fechar a conexão
-    conn.commit()
-    conn.close()
-
-    print("Banco de dados e tabelas criados com sucesso no arquivo farmtech.db")
+    init_db()
+    populate_db()
