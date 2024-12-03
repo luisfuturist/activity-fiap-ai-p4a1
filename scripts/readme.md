@@ -121,137 +121,146 @@ Esta é a modelagem das entidades e seus relacionamentos para o banco de dados u
 
 ### **Entidades e Relacionamentos**
 
-### **1. `AreaPlantio`** (Área de Plantio)
-A tabela **`AreaPlantio`** representa as diferentes áreas de plantio monitoradas.
+### **1. `Planting_Area`**
+A tabela **`Planting_Area`** representa as áreas de plantio.
 
 **Atributos:**
-- `id` (PK): Identificador único da área
-- `nome_area`: Nome da área de plantio
-- `tamanho_hectares`: Tamanho da área em hectares
-- `cultura`: Tipo de cultura plantada na área
-- `data_plantio`: Data de plantio da cultura
+- `id_area` (PK): Identificador único da área de plantio
+- `area_name`: Nome da área
+- `size_hectares`: Tamanho da área em hectares
+- `crop`: Tipo de cultura
+- `planting_date`: Data de plantio
 
 **Relacionamentos:**
-- Um **`AreaPlantio`** pode ter vários **`Sensor`** associados.
-- Um **`AreaPlantio`** pode ter várias **`MedicaoSensor`** associadas.
-- Um **`AreaPlantio`** pode ter várias **`RecomendacaoIrrigacao`** associadas.
-- Um **`AreaPlantio`** pode ter várias **`HistoricoIrrigacao`** associadas.
+- Uma **`Planting_Area`** pode ter várias **`Harvest`**.
+- Uma **`Planting_Area`** pode ter vários **`Sensor`**.
+- Uma **`Planting_Area`** pode ter várias **`Sensor_Measurement`**.
+- Uma **`Planting_Area`** pode ter várias **`Irrigation_Recommendation`**.
+- Uma **`Planting_Area`** pode ter várias **`Irrigation_History`**.
 
 ---
 
-### **2. `TipoSensor`** (Tipo de Sensor)
-A tabela **`TipoSensor`** armazena os tipos de sensores disponíveis.
+### **2. `Harvest`**
+A tabela **`Harvest`** armazena informações sobre colheitas.
 
 **Atributos:**
-- `id` (PK): Identificador único do tipo de sensor
-- `nome`: Nome do tipo de sensor (ex: Umidade, pH, K, P)
-- `descricao`: Descrição do sensor
+- `id_harvest` (PK): Identificador único da colheita
+- `id_area` (FK): Referência à área de plantio
+- `planting_date`: Data de plantio
+- `harvest_date`: Data de colheita
+- `emergence_date`: Data de emergência
+- `phenological_stage`: Estágio fenológico
+- `yield_value`: Valor de produtividade
 
 **Relacionamentos:**
-- Um **`TipoSensor`** pode ter vários **`Sensor`** associados.
+- Uma **`Harvest`** está associada a uma única **`Planting_Area`**.
+- Uma **`Harvest`** pode ter várias **`Sensor_Measurement`**.
 
 ---
 
-### **3. `Sensor`** (Sensor)
-A tabela **`Sensor`** representa sensores instalados em áreas de plantio para realizar medições.
+### **3. `Sensor_Type`**
+A tabela **`Sensor_Type`** define os tipos de sensores.
 
 **Atributos:**
-- `id` (PK): Identificador único do sensor
-- `id_tipo` (FK): Relacionamento com **`TipoSensor`**
-- `id_area` (FK): Relacionamento com **`AreaPlantio`**
-- `nome_sensor`: Nome do sensor (ex: Sensor Umidade - Setor A)
+- `id_type` (PK): Identificador único do tipo de sensor
+- `name`: Nome do tipo de sensor
+- `description`: Descrição do tipo de sensor
 
 **Relacionamentos:**
-- Cada **`Sensor`** pertence a um **`TipoSensor`** e a uma **`AreaPlantio`**.
-- Um **`Sensor`** pode ter várias **`MedicaoSensor`** associadas.
+- Um **`Sensor_Type`** pode ter vários **`Sensor`**.
 
 ---
 
-### **4. `MedicaoSensor`** (Medição de Sensor)
-A tabela **`MedicaoSensor`** armazena as medições realizadas pelos sensores.
+### **4. `Sensor`**
+A tabela **`Sensor`** representa os sensores instalados.
 
 **Atributos:**
-- `id` (PK): Identificador único da medição
-- `id_sensor` (FK): Relacionamento com **`Sensor`**
-- `id_area` (FK): Relacionamento com **`AreaPlantio`**
-- `valor`: Valor medido pelo sensor
-- `data_hora`: Data e hora da medição
-- `condicoes_ambiente`: Condições ambientais na hora da medição
+- `id_sensor` (PK): Identificador único do sensor
+- `id_type` (FK): Referência ao tipo de sensor
+- `id_area` (FK): Referência à área de plantio
+- `sensor_name`: Nome do sensor
 
 **Relacionamentos:**
-- Cada **`MedicaoSensor`** pertence a um **`Sensor`** e a uma **`AreaPlantio`**.
+- Um **`Sensor`** está associado a um único **`Sensor_Type`**.
+- Um **`Sensor`** está associado a uma única **`Planting_Area`**.
+- Um **`Sensor`** pode ter várias **`Sensor_Measurement`**.
 
 ---
 
-### **5. `ModeloML`** (Modelo de Machine Learning)
-A tabela **`ModeloML`** armazena informações sobre os modelos de Machine Learning treinados.
+### **5. `Sensor_Measurement`**
+A tabela **`Sensor_Measurement`** armazena medições dos sensores.
 
 **Atributos:**
-- `id` (PK): Identificador único do modelo
-- `nome_modelo`: Nome do modelo de machine learning
-- `tipo_modelo`: Tipo de modelo (ex: Regressão, Classificação)
-- `data_treinamento`: Data de treinamento do modelo
-- `parametros_modelo`: Hiperparâmetros serializados do modelo
-- `biblioteca_ml`: Biblioteca utilizada para treinar o modelo (ex: TensorFlow, Scikit-learn)
+- `id_measurement` (PK): Identificador único da medição
+- `id_sensor` (FK): Referência ao sensor
+- `id_area` (FK): Referência à área de plantio
+- `id_harvest` (FK): Referência opcional à colheita
+- `measurement`: Valor da medição
+- `datetime`: Data e hora da medição
+- `environmental_conditions`: Condições ambientais
 
 **Relacionamentos:**
-- Um **`ModeloML`** pode ter várias **`MetricasModelo`** associadas.
-- Um **`ModeloML`** pode ter várias **`RecomendacaoIrrigacao`** associadas.
+- Uma **`Sensor_Measurement`** está associada a um único **`Sensor`**.
+- Uma **`Sensor_Measurement`** está associada a uma única **`Planting_Area`**.
+- Uma **`Sensor_Measurement`** pode estar associada a uma única **`Harvest`**.
 
 ---
 
-### **6. `MetricasModelo`** (Métricas do Modelo)
-A tabela **`MetricasModelo`** armazena as métricas avaliadas para os modelos de machine learning.
+### **6. `ML_Model`**
+A tabela **`ML_Model`** armazena informações sobre modelos de Machine Learning.
 
 **Atributos:**
-- `id` (PK): Identificador único da métrica
-- `id_modelo` (FK): Relacionamento com **`ModeloML`**
-- `metrica`: Nome da métrica (ex: Accuracy, MAE, F1-Score)
-- `valor_metrica`: Valor da métrica
+- `id_model` (PK): Identificador único do modelo
+- `model_name`: Nome do modelo
+- `model_type`: Tipo do modelo
+- `training_date`: Data de treinamento
+- `model_parameters`: Parâmetros do modelo
+- `ml_library`: Biblioteca de Machine Learning
+- `accuracy`: Acurácia do modelo
+- `precision`: Precisão do modelo
+- `recall`: Recall do modelo
+- `f1_score`: Pontuação F1
 
 **Relacionamentos:**
-- Cada **`MetricasModelo`** pertence a um **`ModeloML`**.
+- Um **`ML_Model`** pode ter várias **`Irrigation_Recommendation`**.
 
 ---
 
-### **7. `RecomendacaoIrrigacao`** (Recomendação de Irrigação)
-A tabela **`RecomendacaoIrrigacao`** armazena recomendações de irrigação baseadas nos modelos de machine learning.
+### **7. `Irrigation_Recommendation`**
+A tabela **`Irrigation_Recommendation`** armazena recomendações de irrigação.
 
 **Atributos:**
-- `id` (PK): Identificador único da recomendação
-- `id_modelo` (FK): Relacionamento com **`ModeloML`**
-- `id_area` (FK): Relacionamento com **`AreaPlantio`**
-- `data_recomendacao`: Data da recomendação de irrigação
-- `necessidade_irrigacao`: Necessidade de irrigação (booleano)
+- `id_recommendation` (PK): Identificador único da recomendação
+- `id_model` (FK): Referência ao modelo de Machine Learning
+- `id_area` (FK): Referência à área de plantio
+- `recommendation_date`: Data da recomendação
+- `irrigation_needed`: Indicador de necessidade de irrigação
 
 **Relacionamentos:**
-- Cada **`RecomendacaoIrrigacao`** pertence a um **`ModeloML`** e a uma **`AreaPlantio`**.
-- Um **`RecomendacaoIrrigacao`** pode ter várias **`HistoricoIrrigacao`** associadas.
+- Uma **`Irrigation_Recommendation`** está associada a um único **`ML_Model`**.
+- Uma **`Irrigation_Recommendation`** está associada a uma única **`Planting_Area`**.
+- Uma **`Irrigation_Recommendation`** pode ter várias **`Irrigation_History`**.
 
 ---
 
-### **8. `HistoricoIrrigacao`** (Histórico de Irrigação)
-A tabela **`HistoricoIrrigacao`** armazena as informações de irrigação realizadas com base nas recomendações.
+### **8. `Irrigation_History`**
+A tabela **`Irrigation_History`** registra o histórico de irrigações.
 
 **Atributos:**
-- `id` (PK): Identificador único do histórico de irrigação
-- `id_area` (FK): Relacionamento com **`AreaPlantio`**
-- `id_recomendacao` (FK): Relacionamento com **`RecomendacaoIrrigacao`**
-- `hora_inicio`: Hora de início da irrigação
-- `hora_fim`: Hora de término da irrigação
-- `duracao_minutos`: Duração em minutos da irrigação
-- `volume_agua`: Volume de água utilizado durante a irrigação
+- `id_irrigation` (PK): Identificador único do registro de irrigação
+- `id_area` (FK): Referência à área de plantio
+- `id_recommendation` (FK): Referência à recomendação de irrigação
+- `start_time`: Hora de início da irrigação
+- `end_time`: Hora de fim da irrigação
+- `water_volume`: Volume de água utilizado
 
 **Relacionamentos:**
-- Cada **`HistoricoIrrigacao`** pertence a uma **`AreaPlantio`** e a uma **`RecomendacaoIrrigacao`**.
-
----
+- Uma **`Irrigation_History`** está associada a uma única **`Planting_Area`**.
+- Uma **`Irrigation_History`** está associada a uma única **`Irrigation_Recommendation`**.
 
 
 ## **Diagrama Entidade-Relacionamento (DER)**
 ![DER](../assets/DER.png)
-
-
 
 
 ## **Problemas Comuns**
