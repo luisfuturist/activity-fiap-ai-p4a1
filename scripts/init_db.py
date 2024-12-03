@@ -23,179 +23,171 @@ Base = declarative_base()
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
-# Definição das tabelas como classes do SQLAlchemy
+# Table definitions as SQLAlchemy classes
 
 
-class AreaPlantio(Base):
-    __tablename__ = "Area_Plantio"
+class PlantingArea(Base):
+    __tablename__ = "Planting_Area"
     id_area = Column(Integer, primary_key=True, autoincrement=True)
-    nome_area = Column(String, nullable=False)
-    tamanho_hectares = Column(Float)
-    cultura = Column(String)
-    data_plantio = Column(Date)
+    area_name = Column(String, nullable=False)
+    size_hectares = Column(Float)
+    crop = Column(String)
+    planting_date = Column(Date)
 
 
-class Colheita(Base):
-    __tablename__ = "Colheita"
-    id_colheita = Column(Integer, primary_key=True, autoincrement=True)
-    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"), nullable=False)
-    data_colheita = Column(Date, nullable=False)
-    data_emergencia = Column(Date)
-    estadio_fenologico = Column(String)  # e.g., 'V6', 'R1', 'R6'
-    produtividade = Column(Float)  # e.g., kg/ha or tons/ha
-    area = relationship("AreaPlantio")
+class Harvest(Base):
+    __tablename__ = "Harvest"
+    id_harvest = Column(Integer, primary_key=True, autoincrement=True)
+    id_area = Column(Integer, ForeignKey("Planting_Area.id_area"), nullable=False)
+    planting_date = Column(Date, nullable=False)
+    harvest_date = Column(Date)
+    emergence_date = Column(Date)
+    phenological_stage = Column(String)  # e.g., 'V6', 'R1', 'R6'
+    yield_value = Column(Float)  # e.g., kg/ha or tons/ha
+    area = relationship("PlantingArea")
 
 
-class TipoSensor(Base):
-    __tablename__ = "Tipo_Sensor"
-    id_tipo = Column(Integer, primary_key=True, autoincrement=True)
-    nome = Column(String, nullable=False)
-    descricao = Column(String)
+class SensorType(Base):
+    __tablename__ = "Sensor_Type"
+    id_type = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    description = Column(String)
 
 
 class Sensor(Base):
     __tablename__ = "Sensor"
     id_sensor = Column(Integer, primary_key=True, autoincrement=True)
-    id_tipo = Column(Integer, ForeignKey("Tipo_Sensor.id_tipo"), nullable=False)
-    id_area_atual = Column(Integer, ForeignKey("Area_Plantio.id_area"), nullable=False)
-    nome_sensor = Column(String, nullable=False)
-    tipo_sensor = relationship("TipoSensor")
-    area_plantio = relationship("AreaPlantio")
+    id_type = Column(Integer, ForeignKey("Sensor_Type.id_type"), nullable=False)
+    id_area = Column(Integer, ForeignKey("Planting_Area.id_area"), nullable=False)
+    sensor_name = Column(String, nullable=False)
+    sensor_type = relationship("SensorType")
+    planting_area = relationship("PlantingArea")
 
 
-class MedicaoSensor(Base):
-    __tablename__ = "Medicao_Sensor"
-    id_medicao = Column(Integer, primary_key=True, autoincrement=True)
+class SensorMeasurement(Base):
+    __tablename__ = "Sensor_Measurement"
+    id_measurement = Column(Integer, primary_key=True, autoincrement=True)
     id_sensor = Column(Integer, ForeignKey("Sensor.id_sensor"), nullable=False)
-    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"), nullable=False)
-    id_colheita = Column(Integer, ForeignKey("Colheita.id_colheita"), nullable=True)
-    valor = Column(Float)
-    data_hora = Column(TIMESTAMP, default=func.current_timestamp())
-    condicoes_ambiente = Column(String)
+    id_area = Column(Integer, ForeignKey("Planting_Area.id_area"), nullable=False)
+    id_harvest = Column(Integer, ForeignKey("Harvest.id_harvest"), nullable=True)
+    measurement = Column(Float)
+    datetime = Column(TIMESTAMP, default=func.current_timestamp())
+    environmental_conditions = Column(String)
     sensor = relationship("Sensor")
-    area = relationship("AreaPlantio")
-    colheita = relationship("Colheita")
+    area = relationship("PlantingArea")
+    harvest = relationship("Harvest")
 
 
-class ModeloML(Base):
-    __tablename__ = "Modelo_ML"
-    id_modelo = Column(Integer, primary_key=True, autoincrement=True)
-    nome_modelo = Column(String, nullable=False)
-    tipo_modelo = Column(String, nullable=False)
-    data_treinamento = Column(TIMESTAMP, default=func.current_timestamp())
-    parametros_modelo = Column(Text)
-    biblioteca_ml = Column(String, nullable=False)
-    acuracia = Column(Float)
-    precisao = Column(Float)
+class MLModel(Base):
+    __tablename__ = "ML_Model"
+    id_model = Column(Integer, primary_key=True, autoincrement=True)
+    model_name = Column(String, nullable=False)
+    model_type = Column(String, nullable=False)
+    training_date = Column(TIMESTAMP, default=func.current_timestamp())
+    model_parameters = Column(Text)
+    ml_library = Column(String, nullable=False)
+    accuracy = Column(Float)
+    precision = Column(Float)
     recall = Column(Float)
     f1_score = Column(Float)
 
 
-class MetricasModelo(Base):
-    __tablename__ = "Metricas_Modelo"
-    id_metrica = Column(Integer, primary_key=True, autoincrement=True)
-    id_modelo = Column(Integer, ForeignKey("Modelo_ML.id_modelo"))
-    metrica = Column(String, nullable=False)
-    valor_metrica = Column(Float)
-    modelo_ml = relationship("ModeloML")
+class IrrigationRecommendation(Base):
+    __tablename__ = "Irrigation_Recommendation"
+    id_recommendation = Column(Integer, primary_key=True, autoincrement=True)
+    id_model = Column(Integer, ForeignKey("ML_Model.id_model"))
+    id_area = Column(Integer, ForeignKey("Planting_Area.id_area"))
+    recommendation_date = Column(TIMESTAMP, default=func.current_timestamp())
+    irrigation_needed = Column(Boolean)
+    model_ml = relationship("MLModel")
+    area = relationship("PlantingArea")
 
 
-class RecomendacaoIrrigacao(Base):
-    __tablename__ = "Recomendacao_Irrigacao"
-    id_recomendacao = Column(Integer, primary_key=True, autoincrement=True)
-    id_modelo = Column(Integer, ForeignKey("Modelo_ML.id_modelo"))
-    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"))
-    data_recomendacao = Column(TIMESTAMP, default=func.current_timestamp())
-    necessidade_irrigacao = Column(Boolean)
-    modelo_ml = relationship("ModeloML")
-    area = relationship("AreaPlantio")
-
-
-class HistoricoIrrigacao(Base):
-    __tablename__ = "Historico_Irrigacao"
-    id_irrigacao = Column(Integer, primary_key=True, autoincrement=True)
-    id_area = Column(Integer, ForeignKey("Area_Plantio.id_area"))
-    id_recomendacao = Column(
-        Integer, ForeignKey("Recomendacao_Irrigacao.id_recomendacao")
+class IrrigationHistory(Base):
+    __tablename__ = "Irrigation_History"
+    id_irrigation = Column(Integer, primary_key=True, autoincrement=True)
+    id_area = Column(Integer, ForeignKey("Planting_Area.id_area"))
+    id_recommendation = Column(
+        Integer, ForeignKey("Irrigation_Recommendation.id_recommendation")
     )
-    hora_inicio = Column(TIMESTAMP)
-    hora_fim = Column(TIMESTAMP)
-    volume_agua = Column(Float)
-    area = relationship("AreaPlantio")
-    recomendacao = relationship("RecomendacaoIrrigacao")
+    start_time = Column(TIMESTAMP)
+    end_time = Column(TIMESTAMP)
+    water_volume = Column(Float)
+    area = relationship("PlantingArea")
+    recommendation = relationship("IrrigationRecommendation")
 
 
-# Inicialização do banco de dados
+# Database initialization
 def init_db():
     Base.metadata.create_all(engine)
 
 
-# População inicial do banco de dados
+# Initial database population
 def populate_db():
     session = Session()
     try:
-        # Dados iniciais para AreaPlantio
+        # Initial data for PlantingArea
         areas = [
-            AreaPlantio(
-                nome_area="Setor A",
-                tamanho_hectares=10.5,
-                cultura="Milho",
-                data_plantio="2024-01-15",
+            PlantingArea(
+                area_name="Sector A",
+                size_hectares=10.5,
+                crop="Corn",
+                planting_date="2024-01-15",
             ),
-            AreaPlantio(
-                nome_area="Setor B",
-                tamanho_hectares=8.2,
-                cultura="Soja",
-                data_plantio="2024-02-01",
+            PlantingArea(
+                area_name="Sector B",
+                size_hectares=8.2,
+                crop="Soybean",
+                planting_date="2024-02-01",
             ),
         ]
         session.add_all(areas)
 
-        colheitas = [
-            Colheita(
+        harvests = [
+            Harvest(
                 id_area=1,
-                data_colheita="2024-07-15",
-                data_emergencia="2024-03-10",
-                estadio_fenologico="R6",
-                produtividade=8500,
+                planting_date="2024-07-15",
+                emergence_date="2024-03-10",
+                phenological_stage="R6",
+                yield_value=8500,
             ),
-            Colheita(
+            Harvest(
                 id_area=2,
-                data_colheita="2024-08-20",
-                data_emergencia="2024-03-25",
-                estadio_fenologico="R6",
-                produtividade=9200,
+                planting_date="2024-08-20",
+                emergence_date="2024-03-25",
+                phenological_stage="R6",
+                yield_value=9200,
             ),
         ]
-        session.add_all(colheitas)
+        session.add_all(harvests)
 
-        # Dados iniciais para TipoSensor
-        tipos_sensores = [
-            TipoSensor(nome="K", descricao="Sensor para medir o nível de Potássio"),
-            TipoSensor(nome="P", descricao="Sensor para medir o nível de Fósforo"),
-            TipoSensor(nome="pH", descricao="Sensor para medir o nível de pH do solo"),
-            TipoSensor(nome="Umidade", descricao="Sensor para medir a umidade do solo"),
+        # Initial data for SensorType
+        sensor_types = [
+            SensorType(name="K", description="Sensor to measure Potassium level"),
+            SensorType(name="P", description="Sensor to measure Phosphorus level"),
+            SensorType(name="pH", description="Sensor to measure soil pH level"),
+            SensorType(name="Moisture", description="Sensor to measure soil moisture"),
         ]
-        session.add_all(tipos_sensores)
+        session.add_all(sensor_types)
 
-        # Dados iniciais para Sensor
-        sensores = [
-            Sensor(id_tipo=1, id_area_atual=1, nome_sensor="Sensor K - Setor A"),
-            Sensor(id_tipo=2, id_area_atual=1, nome_sensor="Sensor P - Setor A"),
-            Sensor(id_tipo=3, id_area_atual=1, nome_sensor="Sensor pH - Setor A"),
-            Sensor(id_tipo=4, id_area_atual=1, nome_sensor="Sensor Umidade - Setor A"),
-            Sensor(id_tipo=1, id_area_atual=2, nome_sensor="Sensor K - Setor B"),
-            Sensor(id_tipo=2, id_area_atual=2, nome_sensor="Sensor P - Setor B"),
-            Sensor(id_tipo=3, id_area_atual=2, nome_sensor="Sensor pH - Setor B"),
-            Sensor(id_tipo=4, id_area_atual=2, nome_sensor="Sensor Umidade - Setor B"),
+        # Initial data for Sensor
+        sensors = [
+            Sensor(id_type=1, id_area=1, sensor_name="Sensor K - Sector A"),
+            Sensor(id_type=2, id_area=1, sensor_name="Sensor P - Sector A"),
+            Sensor(id_type=3, id_area=1, sensor_name="Sensor pH - Sector A"),
+            Sensor(id_type=4, id_area=1, sensor_name="Sensor Moisture - Sector A"),
+            Sensor(id_type=1, id_area=2, sensor_name="Sensor K - Sector B"),
+            Sensor(id_type=2, id_area=2, sensor_name="Sensor P - Sector B"),
+            Sensor(id_type=3, id_area=2, sensor_name="Sensor pH - Sector B"),
+            Sensor(id_type=4, id_area=2, sensor_name="Sensor Moisture - Sector B"),
         ]
-        session.add_all(sensores)
+        session.add_all(sensors)
 
         session.commit()
-        print("Banco de dados populado com sucesso!")
+        print("Database populated successfully!")
     except Exception as e:
         session.rollback()
-        print(f"Erro ao popular o banco de dados: {e}")
+        print(f"Error populating the database: {e}")
     finally:
         session.close()
 
