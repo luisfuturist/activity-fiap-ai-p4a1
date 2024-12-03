@@ -4,6 +4,24 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <PubSubClient.h>
+
+// WiFi credentials
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+// MQTT broker configuration
+const char* mqtt_server = "759d2f782c6f48d68eafab33492641f8.s1.eu.hivemq.cloud";
+const int mqtt_port = 8883;
+const char* mqtt_user = "sla";
+const char* mqtt_password = "sla";
+bool irrigationStatus = false;
+
+
+// MQTT topics
+const char* irrigation = "consumer/irrigation";
 
 // Definições de pinos
 #define SOIL_MOISTURE_PIN 34  // Pino analógico para umidade do solo
@@ -22,5 +40,10 @@ uint8_t calculatePercent(uint16_t value);
 void updateIrrigationStatus(uint8_t soilMoisturePercent, bool& irrigationStatus);
 void displayOnLCD(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus);
 void logToSerial(uint8_t soilMoisturePercent, uint8_t nutrientLevelPercent, bool irrigationStatus);
+void mqttCallback(char* topic, byte* payload, unsigned int length);
+void connectToWiFi();
+void connectMQTT();
+void mqttCallback(char* topic, byte* payload, unsigned int length);
+
 
 #endif // MAIN_H

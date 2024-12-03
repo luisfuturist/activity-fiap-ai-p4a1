@@ -3,15 +3,31 @@
 // Instância do LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+// MQTT client
+WiFiClientSecure secureClient;
+PubSubClient client(secureClient);
+
 void setup() {
   Serial.begin(115200);
 
   // Inicializar o LCD
   initializeLCD();
 
+  // Conectar ao Wi-Fi
+  connectToWiFi();
+
+  // Conectar ao broker MQTT
+
   // Configuração do LED de irrigação
   pinMode(IRRIGATION_LED_PIN, OUTPUT);
   digitalWrite(IRRIGATION_LED_PIN, LOW);
+
+  // Configurar cliente seguro
+
+  // Configurar cliente MQTT
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(mqttCallback);
+  connectMQTT();
 
   // Mensagem inicial no monitor serial
   Serial.println("SoilMoisture NutrientLevel IrrigationStatus");
@@ -20,7 +36,8 @@ void setup() {
 void loop() {
   uint16_t soilMoisture = 0, nutrientLevel = 0;
   uint8_t soilMoisturePercent = 0, nutrientLevelPercent = 0;
-  bool irrigationStatus = false;
+
+  client.loop();
 
   // Ler os sensores
   readSensors(soilMoisture, nutrientLevel);
@@ -39,6 +56,53 @@ void loop() {
   logToSerial(soilMoisturePercent, nutrientLevelPercent, irrigationStatus);
 
   delay(1000); // Atualizar a cada segundo
+}
+
+void connectToWiFi() {
+  if (WiFi.status() == WL_CONNECTED) return;
+  Serial.print("Conectando-se na rede: ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nConectado ao Wi-Fi!");
+}
+
+void connectMQTT() {
+  while (!client.connected()) {
+    Serial.print("Tentando conectar ao MQTT...");
+    secureClient.setInsecure();
+    if (client.connect("ESP32Client", mqtt_user, mqtt_password)) {
+      Serial.println("Conectado ao broker MQTT!");
+      client.subscribe(irrigation);
+    } else {
+      Serial.print("Falha na conexão, rc=");
+      Serial.println(client.state());
+      delay(5000);
+    }
+  }
+}
+
+// Handle MQTT messages
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+    Serial.print("Mensagem recebida no tópico ");
+    String message;
+    for (unsigned int i = 0; i < length; i++) {
+        message += (char)payload[i];
+    }
+
+    Serial.print("Mensagem recebida no tópico ");
+    Serial.print(topic);
+    Serial.print(": ");
+    Serial.println(message);
+
+    if (String(topic) == irrigation) {
+        irrigationStatus = (message == "true");
+    } else {
+      irrigationStatus = false;
+    }
 }
 
 // Função para inicializar o LCD
@@ -65,7 +129,6 @@ uint8_t calculatePercent(uint16_t value) {
 
 // Função para atualizar o status de irrigação
 void updateIrrigationStatus(uint8_t soilMoisturePercent, bool& irrigationStatus) {
-  irrigationStatus = soilMoisturePercent < 30; // Limiar de 30%
   digitalWrite(IRRIGATION_LED_PIN, irrigationStatus ? HIGH : LOW);
 }
 

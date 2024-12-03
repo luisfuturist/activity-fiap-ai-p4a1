@@ -10,9 +10,9 @@
             "includePath": [
                 "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/include",
                 "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/src",
-                "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/DHT sensor library for ESPx",
-                "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/PubSubClient/src",
+                "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
+                "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/PubSubClient/src",
                 "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/LiquidCrystal_I2C",
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/ArduinoJson/src",
@@ -241,7 +241,6 @@
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                 ""
             ],
@@ -250,9 +249,9 @@
                 "path": [
                     "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/include",
                     "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/src",
-                    "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/DHT sensor library for ESPx",
-                    "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/PubSubClient/src",
+                    "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
+                    "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/PubSubClient/src",
                     "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/LiquidCrystal_I2C",
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/eugen/OneDrive/Documentos/activity-fiap-ai-p4a1/Platformio/.pio/libdeps/esp32/ArduinoJson/src",
@@ -481,7 +480,6 @@
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                    "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/eugen/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                     ""
                 ]
