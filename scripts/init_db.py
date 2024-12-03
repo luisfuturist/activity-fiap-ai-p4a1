@@ -44,7 +44,6 @@ class Colheita(Base):
     estadio_fenologico = Column(String)  # e.g., 'V6', 'R1', 'R6'
     produtividade = Column(Float)  # e.g., kg/ha or tons/ha
     area = relationship("AreaPlantio")
-    # Add other relevant fields as needed (e.g., yield, quality metrics, etc.)
 
 
 class TipoSensor(Base):
@@ -86,6 +85,10 @@ class ModeloML(Base):
     data_treinamento = Column(TIMESTAMP, default=func.current_timestamp())
     parametros_modelo = Column(Text)
     biblioteca_ml = Column(String, nullable=False)
+    acuracia = Column(Float)
+    precisao = Column(Float)
+    recall = Column(Float)
+    f1_score = Column(Float)
 
 
 class MetricasModelo(Base):
