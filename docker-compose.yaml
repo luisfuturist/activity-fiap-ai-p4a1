@@ -1,17 +1,17 @@
+version: '3.8'
+
 services:
-  oracle_db:
-    image: gvenzl/oracle-free:latest
-    container_name: oracle_container
-    environment:
-      ORACLE_PASSWORD: oracle_password
-      ORACLE_DATABASE: oracle_database
-      ORACLE_ALLOW_REMOTE: "true"
-      APP_USER: oracle_user
-      APP_USER_PASSWORD: oracle_password
+  postgres:
+    image: postgres:15
+    container_name: fiap_p4a1_postgres
     ports:
-      - "1521:1521"
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: fiap_p4a1
+      POSTGRES_PASSWORD: fiap_p4a1
+      POSTGRES_DB: fiap_p4a1
     volumes:
-      - oracle_data:/opt/oracle/oradata
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  oracle_data:
+  postgres_data:

@@ -14,7 +14,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 
 # Database connection details
-DATABASE_URL = "postgresql://fiap_p4a1:fiap_p4a1@localhost:5432/fiap_p4a1"
+DATABASE_URL = "postgresql://fiap_p4a1:fiap_p4a1@localhost:5433/fiap_p4a1"
 
 # Base class for SQLAlchemy ORM
 Base = declarative_base()
@@ -193,4 +193,5 @@ def populate_db():
 
 
 if __name__ == "__main__":
-    init_db()z
+    init_db()
+    populate_db()
