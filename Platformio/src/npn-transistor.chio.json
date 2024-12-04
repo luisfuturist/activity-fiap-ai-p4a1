@@ -1,0 +1,10 @@
+{
+    "name": "npn-transistor",
+    "author": "Luis Domínguez",
+    "pins": [
+      "EMITTER",
+      "COLLECTOR",
+      "BASE"
+    ],
+    "controls": []
+  }
