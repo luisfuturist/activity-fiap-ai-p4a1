@@ -20,10 +20,6 @@ const char* mqtt_server = "759d2f782c6f48d68eafab33492641f8.s1.eu.hivemq.cloud";
 const int mqtt_port = 8883;
 const char* mqtt_user = "sla";
 const char* mqtt_password = "sla";
-bool irrigationStatus = false;
-
-// MQTT topics
-const char* irrigation = "consumer/irrigation"; 
 
 // Declare mux_channels as external
 extern const char* mux_channels[];

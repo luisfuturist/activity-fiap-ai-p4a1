@@ -16,8 +16,16 @@ const char* mux_channels[] = {
     "chanel/c12", "chanel/c13", "chanel/c14", "chanel/c15"
 };
 
+const char* irrigation_channels[] = {
+    "irrigation/c0", "irrigation/c1", "irrigation/c2", "irrigation/c3",
+    "irrigation/c4", "irrigation/c5", "irrigation/c6", "irrigation/c7",
+    "irrigation/c8", "irrigation/c9", "irrigation/c10", "irrigation/c11",
+    "irrigation/c12", "irrigation/c13", "irrigation/c14", "irrigation/c15"
+};
+
 const char* topics[] = { "led/c0", "led/c1", "led/c2", "led/c3" };
-bool channelStates[4] = {true, true, true, true}; // Tracks the state of each channel
+bool channelStates[4] = {false, false, false, false}; // Tracks the state of each channel
+bool LEDS_STATES[4] = {true, true, true, true}; // Tracks the state of each channel
 
 const uint8_t controlPins[] = {MUX_S0_PIN, MUX_S1_PIN, MUX_S2_PIN, MUX_S3_PIN};
 
@@ -47,6 +55,11 @@ void setup() {
   pinMode(SOIL_COM_PIN, INPUT);        
   pinMode(NUTRIENT_COM_PIN, INPUT);    
 
+   // Initialize shift register control pins
+  pinMode(dataPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+
   // Configure MQTT client
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(mqttCallback); // Set the MQTT callback function
@@ -65,6 +78,7 @@ void loop() {
 
   unsigned long currentMillis = millis();
   if (currentMillis - lastReadTime >= readInterval) {
+    sendInvertedChannelStates();
     lastReadTime = currentMillis;
 
     // Read and publish data for all sensors
@@ -73,20 +87,17 @@ void loop() {
 }
 
 void updateShiftRegister() {
-  // Create a byte representing the LED states
   uint8_t ledStates = 0;
   for (uint8_t i = 0; i < 4; i++) {
     if (channelStates[i]) {
       ledStates |= (1 << i); // Set bit i if channelStates[i] is true
     }
   }
+  // Invert the bits because HIGH turns the LED ON via the transistor
 
-  // Send the byte to the shift register
   digitalWrite(latchPin, LOW);
   shiftOut(dataPin, clockPin, MSBFIRST, ledStates);
   digitalWrite(latchPin, HIGH);
-
-  //Serial.printf("Shift register updated: %02X\n", ledStates);
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
@@ -101,10 +112,10 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     if (String(topic) == String(topics[i])) {
       topicMatched = true;
       if (message.equalsIgnoreCase("true")) {
-        channelStates[i] = false;  // Turn ON the corresponding channel
+        channelStates[i] = true;  // Turn ON the corresponding channel
         Serial.printf("Channel %d set to ON\n", i);
       } else if (message.equalsIgnoreCase("false")) {
-        channelStates[i] = true; // Turn OFF the corresponding channel
+        channelStates[i] = false; // Turn OFF the corresponding channel
         Serial.printf("Channel %d set to OFF\n", i);
       } else {
         Serial.printf("Invalid message for channel %d. Expected 'true' or 'false'.\n", i);
@@ -114,6 +125,26 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   }
   if (!topicMatched) {
     Serial.println("Received message on unknown topic.");
+  }
+}
+
+void sendInvertedChannelStates() {
+  for (uint8_t i = 0; i < 4; i++) {
+    // Invert the current state
+    LEDS_STATES[i] = !channelStates[i];
+
+    // Create a JSON payload to publish
+    DynamicJsonDocument doc(64);
+    doc["state"] = LEDS_STATES[i] ? "OFF" : "ON"; // Send "OFF" for true and "ON" for false
+
+    // Serialize JSON to a string
+    char jsonBuffer[64];
+    serializeJson(doc, jsonBuffer);
+
+    // Publish to the corresponding topic
+    if (client.publish(irrigation_channels[i], jsonBuffer)) {
+      Serial.printf("Send state of channel %d to topic %s\n", i, topics[i]);
+    }
   }
 }
 
@@ -156,11 +187,11 @@ void initializeLCD() {
   lcd.clear();
 }
 
-void EnviaValores(float soilMoisturePercent, float nutrientLevelPercent, float temperatura, float umidade, const char* topic) {
+void EnviaValores(float potassiumPercent, float phosphorusPercent, float temperatura, float umidade, const char* topic) {
   DynamicJsonDocument doc(256); // Use DynamicJsonDocument for simplicity
 
-  doc["soilMoisture"] = soilMoisturePercent;
-  doc["nutrientLevel"] = nutrientLevelPercent;
+  doc["soilMoisture"] = potassiumPercent;
+  doc["nutrientLevel"] = phosphorusPercent;
   doc["temperature"] = temperatura;
   doc["humidity"] = umidade;
 
@@ -208,18 +239,18 @@ uint8_t calculatePercent(uint16_t value) {
   return map(value, 0, 4095, 0, 100);
 }
 
-void logToSerial(float soilMoisturePercent, float nutrientLevelPercent, float temperatura, float umidade) {
+void logToSerial(float potassiumPercent, float phosphorusPercent, float temperatura, float umidade) {
   Serial.print("Temp: ");
   Serial.print(temperatura);
   Serial.print(" Umid: ");
   Serial.print(umidade);
-  Serial.print(" Soil: ");
-  Serial.print(soilMoisturePercent);
-  Serial.print(" Nutrient: ");
-  Serial.println(nutrientLevelPercent);
+  Serial.print(" Potassium: ");
+  Serial.print(potassiumPercent);
+  Serial.print(" Phosphorus: ");
+  Serial.println(phosphorusPercent);
 }
 
-void displayReadingsOnLCD(int channel, float soilMoisturePercent, float nutrientLevelPercent, float temperature, float humidity) {
+void displayReadingsOnLCD(int channel, float potassiumPercent, float phosphorusPercent, float temperature, float humidity) {
   lcd.clear(); // Clear the LCD screen
 
   // Display the channel number on the first line
@@ -242,12 +273,12 @@ void displayReadingsOnLCD(int channel, float soilMoisturePercent, float nutrient
   // Display soil moisture and nutrient level on the third and fourth lines
   lcd.setCursor(0, 2);
   lcd.print("Soil: ");
-  lcd.print(soilMoisturePercent);
+  lcd.print(potassiumPercent);
   lcd.print("%");
 
   lcd.setCursor(0, 3);
   lcd.print("Nutri: ");
-  lcd.print(nutrientLevelPercent);
+  lcd.print(phosphorusPercent);
   lcd.print("%");
 }
 
