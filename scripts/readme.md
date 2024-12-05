@@ -82,38 +82,14 @@ sqlalchemy
 ### **Pré-requisitos**
 Certifique-se de que o Docker e o Docker Compose estão instalados em sua máquina.
 
-### **Passo 1: Configurar o arquivo `docker-compose.yaml`**
-Crie um arquivo chamado `docker-compose.yaml` com o seguinte conteúdo:
-
-```yaml
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:15
-    container_name: fiap_p4a1_postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: fiap_p4a1
-      POSTGRES_PASSWORD: fiap_p4a1
-      POSTGRES_DB: fiap_p4a1
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-```
-
-### **Passo 2: Executar o PostgreSQL**
+### **Passo 1: Executar o PostgreSQL**
 1. No terminal, navegue até o diretório onde está o arquivo `docker-compose.yaml`.
 2. Execute o comando para iniciar o contêiner:
    ```bash
    docker-compose up -d
    ```
 
-   - Isso fará o download da imagem do PostgreSQL (caso ainda não esteja no sistema), configurará o banco de dados e o disponibilizará na porta 5432.
-
+   - Isso fará o download da imagem do PostgreSQL (caso ainda não esteja no sistema), configurará o banco de dados e o disponibilizará na porta 5433.
 3. Confirme que o contêiner está rodando:
    ```bash
    docker ps
@@ -121,13 +97,13 @@ volumes:
 
    Você deverá ver o contêiner `fiap_p4a1_postgres` em execução.
 
-### **Passo 3: Acessar o PostgreSQL**
+### **Passo 2: Acessar o PostgreSQL**
 Caso queira acessar o PostgreSQL no contêiner para verificar a configuração, use:
 ```bash
 docker exec -it fiap_p4a1_postgres psql -U fiap_p4a1 -d fiap_p4a1
 ```
 
-### **Passo 4: Executar o script Python**
+### **Passo 3: Executar o script Python**
 Agora, com o PostgreSQL rodando no Docker, execute o script Python normalmente:
 ```bash
 python scripts/init_db.py
@@ -141,11 +117,11 @@ Database populated successfully!
 ---
 
 ### **Considerações para o `DATABASE_URL`**
-No seu script Python, o valor de `DATABASE_URL` não precisa ser alterado, pois o contêiner expõe o PostgreSQL na porta padrão `5432` no host local.
+No seu script Python, o valor de `DATABASE_URL` não precisa ser alterado, pois o contêiner expõe o PostgreSQL na porta padrão `5433` no host local.
 
 Se, por algum motivo, o script Python não estiver rodando na mesma máquina que o Docker, ajuste `DATABASE_URL` para usar o IP ou hostname do servidor Docker. Por exemplo:
 ```
-DATABASE_URL="postgresql://fiap_p4a1:fiap_p4a1@<docker_host_ip>:5432/fiap_p4a1"
+DATABASE_URL="postgresql://fiap_p4a1:fiap_p4a1@<docker_host_ip>:5433/fiap_p4a1"
 ```
 
 ---

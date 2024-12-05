@@ -1,5 +1,4 @@
 from sqlalchemy import (
-    create_engine,
     Column,
     Integer,
     String,
@@ -11,17 +10,12 @@ from sqlalchemy import (
     TIMESTAMP,
 )
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship, sessionmaker, declarative_base
-
-# Database connection details
-DATABASE_URL = "postgresql://fiap_p4a1:fiap_p4a1@localhost:5433/fiap_p4a1"
+from sqlalchemy.orm import relationship, declarative_base
+from database_session import get_db  # Import get_db function
 
 # Base class for SQLAlchemy ORM
 Base = declarative_base()
 
-# Setup the database engine and session
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
 
 # Table definitions as SQLAlchemy classes
 
@@ -119,77 +113,78 @@ class IrrigationHistory(Base):
 
 # Database initialization
 def init_db():
-    Base.metadata.create_all(engine)
+    with get_db() as db:
+        Base.metadata.create_all(db.bind)
 
 
 # Initial database population
 def populate_db():
-    session = Session()
-    try:
-        # Initial data for PlantingArea
-        areas = [
-            PlantingArea(
-                area_name="Sector A",
-                size_hectares=10.5,
-                crop="Corn",
-                planting_date="2024-01-15",
-            ),
-            PlantingArea(
-                area_name="Sector B",
-                size_hectares=8.2,
-                crop="Soybean",
-                planting_date="2024-02-01",
-            ),
-        ]
-        session.add_all(areas)
+    with get_db() as db:
+        try:
+            # Initial data for PlantingArea
+            areas = [
+                PlantingArea(
+                    area_name="Sector A",
+                    size_hectares=10.5,
+                    crop="Corn",
+                    planting_date="2024-01-15",
+                ),
+                PlantingArea(
+                    area_name="Sector B",
+                    size_hectares=8.2,
+                    crop="Soybean",
+                    planting_date="2024-02-01",
+                ),
+            ]
+            db.add_all(areas)
 
-        harvests = [
-            Harvest(
-                id_area=1,
-                planting_date="2024-07-15",
-                emergence_date="2024-03-10",
-                phenological_stage="R6",
-                yield_value=8500,
-            ),
-            Harvest(
-                id_area=2,
-                planting_date="2024-08-20",
-                emergence_date="2024-03-25",
-                phenological_stage="R6",
-                yield_value=9200,
-            ),
-        ]
-        session.add_all(harvests)
+            harvests = [
+                Harvest(
+                    id_area=1,
+                    planting_date="2024-07-15",
+                    emergence_date="2024-03-10",
+                    phenological_stage="R6",
+                    yield_value=8500,
+                ),
+                Harvest(
+                    id_area=2,
+                    planting_date="2024-08-20",
+                    emergence_date="2024-03-25",
+                    phenological_stage="R6",
+                    yield_value=9200,
+                ),
+            ]
+            db.add_all(harvests)
 
-        # Initial data for SensorType
-        sensor_types = [
-            SensorType(name="K", description="Sensor to measure Potassium level"),
-            SensorType(name="P", description="Sensor to measure Phosphorus level"),
-            SensorType(name="pH", description="Sensor to measure soil pH level"),
-            SensorType(name="Moisture", description="Sensor to measure soil moisture"),
-        ]
-        session.add_all(sensor_types)
+            # Initial data for SensorType
+            sensor_types = [
+                SensorType(name="K", description="Sensor to measure Potassium level"),
+                SensorType(name="P", description="Sensor to measure Phosphorus level"),
+                SensorType(name="pH", description="Sensor to measure soil pH level"),
+                SensorType(
+                    name="Moisture", description="Sensor to measure soil moisture"
+                ),
+            ]
+            db.add_all(sensor_types)
 
-        # Initial data for Sensor
-        sensors = [
-            Sensor(id_type=1, id_area=1, sensor_name="Sensor K - Sector A"),
-            Sensor(id_type=2, id_area=1, sensor_name="Sensor P - Sector A"),
-            Sensor(id_type=3, id_area=1, sensor_name="Sensor pH - Sector A"),
-            Sensor(id_type=4, id_area=1, sensor_name="Sensor Moisture - Sector A"),
-            Sensor(id_type=1, id_area=2, sensor_name="Sensor K - Sector B"),
-            Sensor(id_type=2, id_area=2, sensor_name="Sensor P - Sector B"),
-            Sensor(id_type=3, id_area=2, sensor_name="Sensor pH - Sector B"),
-            Sensor(id_type=4, id_area=2, sensor_name="Sensor Moisture - Sector B"),
-        ]
-        session.add_all(sensors)
+            # Initial data for Sensor
+            sensors = [
+                Sensor(id_type=1, id_area=1, sensor_name="Sensor K - Sector A"),
+                Sensor(id_type=2, id_area=1, sensor_name="Sensor P - Sector A"),
+                Sensor(id_type=3, id_area=1, sensor_name="Sensor pH - Sector A"),
+                Sensor(id_type=4, id_area=1, sensor_name="Sensor Moisture - Sector A"),
+                Sensor(id_type=1, id_area=2, sensor_name="Sensor K - Sector B"),
+                Sensor(id_type=2, id_area=2, sensor_name="Sensor P - Sector B"),
+                Sensor(id_type=3, id_area=2, sensor_name="Sensor pH - Sector B"),
+                Sensor(id_type=4, id_area=2, sensor_name="Sensor Moisture - Sector B"),
+            ]
+            db.add_all(sensors)
 
-        session.commit()
-        print("Database populated successfully!")
-    except Exception as e:
-        session.rollback()
-        print(f"Error populating the database: {e}")
-    finally:
-        session.close()
+            db.commit()
+            print("Database populated successfully!")
+        except Exception as e:
+            db.rollback()
+            print(f"Error populating the database: {e}")
 
 
 if __name__ == "__main__":

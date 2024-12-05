@@ -1,7 +1,7 @@
 from typing import TypedDict
 from sqlalchemy.exc import SQLAlchemyError
-from .init_db import PlantingArea
-from .database_session import get_db
+from init_db import PlantingArea
+from database_session import get_db
 import datetime
 
 
@@ -53,10 +53,7 @@ def update_planting_area(id_area: int, updates: PlantingAreaUpdate):
         try:
             area = db.query(PlantingArea).get(id_area)
             if area:
-                update_data = updates.model_dump(
-                    exclude_unset=True
-                )  # Only update set fields
-                for key, value in update_data.items():
+                for key, value in updates.items():
                     setattr(area, key, value)
                 db.commit()
                 return area
