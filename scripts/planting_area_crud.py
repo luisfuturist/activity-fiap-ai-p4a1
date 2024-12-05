@@ -94,5 +94,5 @@ if __name__ == "__main__":
     updated_area = update_planting_area(new_area.id_area, {"crop": "Barley"})
     print(f"Updated Planting Area: {updated_area}")
 
-    deleted = delete_planting_area(new_area.id_area)
-    print(f"Deleted Planting Area: {deleted}")
+    # deleted = delete_planting_area(new_area.id_area)
+    # print(f"Deleted Planting Area: {deleted}")
