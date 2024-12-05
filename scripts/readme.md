@@ -298,6 +298,65 @@ A tabela **`Irrigation_History`** registra o histórico de irrigações.
 ![DER](../assets/DER.png)
 
 
+## Exemplo de Operações CRUD
+
+Esta seção demonstra o uso das operações CRUD definidas em `planting_area_crud.py`.  Estas funções agora acessam a sessão de banco de dados diretamente através do arquivo `database_session.py`, simplificando seu uso. A função `update_planting_area` agora utiliza `typing.TypedDict` para tipagem, melhorando a autocompletação no VS Code sem a necessidade de validação em tempo de execução do Pydantic.
+
+As operações CRUD para as entidades `Harvest`, `Sensor`, `Sensor_Measurement`, `ML_Model`, `Irrigation_Recommendation` e `Irrigation_History` podem ser realizadas de forma similar.
+
+**Pré-requisitos:** Certifique-se de que os arquivos `database_session.py` e `planting_area_crud.py` estejam no mesmo diretório. Certifique-se também que o banco de dados PostgreSQL esteja rodando.
+
+
+Primeiro, certifique-se de ter as seguintes importações no seu arquivo principal (ex: `app.py`):
+
+```python
+from .planting_area_crud import (
+    create_planting_area,
+    get_planting_area,
+    get_all_planting_areas,
+    update_planting_area,
+    delete_planting_area,
+)
+import datetime
+```
+
+Em seguida, use as funções como mostrado neste exemplo (em `app.py` ou similar):
+
+
+```python
+# ... (Outras importações e código, se necessário) ...
+
+# Exemplo de uso com tratamento de erros:
+
+try:
+    new_area = create_planting_area("Área B", 12.0, "Trigo", "2024-04-10")
+    print(f"Área de plantio criada: {new_area}")
+
+    retrieved_area = get_planting_area(new_area.id_area)
+    print(f"Área de plantio recuperada: {retrieved_area}")
+
+    all_areas = get_all_planting_areas()
+    print(f"Todas as áreas de plantio: {all_areas}")
+
+    # Atualizando apenas o campo 'crop'
+    updated_area = update_planting_area(new_area.id_area, {"crop": "Cevada"})
+    print(f"Área de plantio atualizada: {updated_area}")
+
+    deleted = delete_planting_area(new_area.id_area)
+    print(f"Área de plantio deletada: {deleted}")
+
+except Exception as e:
+    print(f"Ocorreu um erro durante a operação CRUD: {e}")
+
+```
+
+**Observações:**
+
+* A função `update_planting_area` aceita um dicionário como parâmetro, seguindo a definição de tipo `PlantingAreaUpdate` em `planting_area_crud.py`.  Este dicionário pode conter apenas os campos que você deseja atualizar.  A tipagem com `TypedDict` auxilia na autocompletação no VS Code, mas não realiza validação em tempo de execução dos dados. Para validação, considere o uso de Pydantic.
+* Certifique-se de que o banco de dados esteja em execução antes de executar este exemplo.
+* Substitua "Trigo" e "Cevada" por outros tipos de cultura, se necessário.
+
+
 ## **Problemas Comuns**
 
 ### **Ambiente virtual não ativa**
