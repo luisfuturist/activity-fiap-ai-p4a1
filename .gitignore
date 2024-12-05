@@ -2,3 +2,4 @@
 *.tsv
 *.xls
 *.xlsx
+venv/
