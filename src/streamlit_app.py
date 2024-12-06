@@ -13,7 +13,7 @@ def main():
     st.title("Bem vindo ao FarmSettings")
 
     # Lista de itens do menu
-    menu_items = ["Cadastrar área", "Alterar área", "Ativar irrigação", "Painel de dados"]
+    menu_items = [ "Painel de dados", "Cadastrar área", "Alterar área", "Ativar irrigação"]
 
     # Criando o menu na sidebar usando radio buttons
     st.sidebar.title("Menu de Navegação")
