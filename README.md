@@ -1,24 +1,28 @@
 # activity-fiap-ai-p4a1
 
 > **Note:**  
-> This project is part of the **Artificial Intelligence** course at [FIAP](https://github.com/fiap) - Online 2024. It is the "**Phase 4** Activity Chapter 1 - Automation and intelligence in the FarmTech solution."
+> This repository is part of the **Artificial Intelligence** course at [FIAP](https://github.com/fiap) - Online 2024. It contains the activity titled *"Chapter 1 - Automation and Intelligence in the FarmTech Solution"* from Phase 4.
 
-## Overview
+This repository provides a solution for optimizing irrigation and nutrient management through predictive intelligence and real-time monitoring. The enhanced system combines Scikit-learn for predictive modeling, Streamlit for interactive dashboards, and ESP32 for field hardware integration. It marks a significant upgrade from previous versions, introducing improvements in database architecture, embedded systems, and a user-friendly interface to deliver actionable insights for smarter farming.
 
-### Objective
+## Features
 
-Develop an enhanced FarmTech solution by integrating predictive intelligence and real-time monitoring to optimize irrigation and nutrient management. Leverage Scikit-learn for predictive modeling, Streamlit for visualization, and ESP32 for field hardware integration.
+- **Database**: PostgreSQL database for data persistence and efficient queries.  
+- **Interactive Dashboard**: A user-friendly Streamlit app to visualize real-time data.  
+- **ESP32 Integration**: Seamless communication with field hardware for data collection and irrigation control.  
+- **Predictive Modeling**: Machine learning models built with Scikit-learn to predict irrigation needs. 
 
-### **Key Improvements in Phase 4**
+### Key Improvements
 
 1. **Database Enhancements**  
    - Transitioned to a more robust **PostgreSQL** database structure to handle data more efficiently.
    - Improved data schema for storing and querying historical data, such as soil moisture and nutrient levels.
-   - Seamless integration with Python for real-time analysis and predictive modeling.
+   - Enhanced naming conventions for columns and table names.
 
 2. **Streamlit Integration**  
-   - Built a fully functional, interactive **dashboard** to visualize soil and nutrient data in real-time.
-   - Added dynamic charts to monitor metrics, generate insights, and display the results of predictive models.
+    - Developed a user-friendly **dashboard** using Streamlit to visualize real-time irrigation data.
+    - Implemented dynamic charts to monitor soil metrics.
+    - Achieved seamless integration with Python to showcase insights from the machine learning model.
 
 3. **ESP32 Enhancements**  
    - Optimized sensor integration and memory usage.
@@ -26,14 +30,7 @@ Develop an enhanced FarmTech solution by integrating predictive intelligence and
 
 4. **Predictive Modeling with Scikit-learn**  
    - Developed a predictive model to recommend irrigation actions based on historical data.
-   - Incorporated machine learning for actionable insights into water and nutrient management.
-
-## Features
-
-- **Predictive Modeling**: Advanced machine learning models built with Scikit-learn to predict irrigation needs.  
-- **Interactive Dashboard**: A user-friendly Streamlit app to visualize real-time data.  
-- **ESP32 Integration**: Seamless communication with field hardware for data collection and irrigation control.  
-- **Database Integration**: Enhanced PostgreSQL database for data persistence and efficient queries.  
+   - Incorporated machine learning for actionable insights into water management. 
 
 ## Installation
 
@@ -57,7 +54,7 @@ To clone the repository to your local machine:
 
 ```sh
 git clone https://github.com/luisfuturist/activity-fiap-ai-p4a1.git
-cd activity-fiap-ai-p4a3/
+cd activity-fiap-ai-p4a1/
 ```
 
 ## Setup
@@ -72,7 +69,7 @@ cd activity-fiap-ai-p4a3/
     docker compose down
     ```
 
-2. **Create and Activate Virtual Environment**:
+2. **Create and Activate a Virtual Environment**:
    ```sh
    python3 -m venv .venv
    source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
@@ -103,7 +100,7 @@ Access the [GitHub Project](https://github.com/users/luisfuturist/projects/4).
 
 - [Amandha Nery](https://www.linkedin.com/in/amandhanery/) (RM560030)
 - [Bruno Conterato](https://www.linkedin.com/in/brunoconterato/) (RM561048)
-- Gustavo Castro (RM560831)
+- [Gustavo Castro](https://www.linkedin.com/in/gustavo-castro-29a78a2a/) (RM560831)
 - [Kild Fernandes](https://www.linkedin.com/in/kild-fernandes/) (RM560615)
 - [Luis Emidio](https://www.linkedin.com/in/luisfuturist/) (RM559976)
 
