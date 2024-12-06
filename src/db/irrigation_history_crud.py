@@ -1,7 +1,7 @@
 from typing import TypedDict
 from sqlalchemy.exc import SQLAlchemyError
-from init_db import IrrigationHistory
-from database_session import get_db
+from db.models import IrrigationHistory
+from db.database_session import get_db
 import datetime
 
 

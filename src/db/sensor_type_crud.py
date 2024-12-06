@@ -1,7 +1,7 @@
 from typing import TypedDict
 from sqlalchemy.exc import SQLAlchemyError
-from init_db import SensorType
-from database_session import get_db
+from db.models import SensorType
+from db.database_session import get_db
 
 
 class SensorTypeUpdate(TypedDict, total=False):

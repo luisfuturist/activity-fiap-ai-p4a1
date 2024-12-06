@@ -1,8 +1,8 @@
 from typing import TypedDict
 from sqlalchemy.exc import SQLAlchemyError
-from init_db import Harvest
-from database_session import get_db
 import datetime
+from db.models import Harvest
+from db.database_session import get_db
 
 
 class HarvestUpdate(TypedDict, total=False):
