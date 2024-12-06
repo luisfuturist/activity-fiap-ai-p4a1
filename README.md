@@ -9,9 +9,31 @@
 
 Develop an enhanced FarmTech solution by integrating predictive intelligence and real-time monitoring to optimize irrigation and nutrient management. Leverage Scikit-learn for predictive modeling, Streamlit for visualization, and ESP32 for field hardware integration.
 
-### Features
+### **Key Improvements in Phase 4**
 
-//TODO
+1. **Database Enhancements**  
+   - Transitioned to a more robust **PostgreSQL** database structure to handle data more efficiently.
+   - Improved data schema for storing and querying historical data, such as soil moisture and nutrient levels.
+   - Seamless integration with Python for real-time analysis and predictive modeling.
+
+2. **Streamlit Integration**  
+   - Built a fully functional, interactive **dashboard** to visualize soil and nutrient data in real-time.
+   - Added dynamic charts to monitor metrics, generate insights, and display the results of predictive models.
+
+3. **ESP32 Enhancements**  
+   - Optimized sensor integration and memory usage.
+   - Connected ESP32 to a **Wokwi simulation**, which now sends data to the dashboard through an MQTT protocol.
+
+4. **Predictive Modeling with Scikit-learn**  
+   - Developed a predictive model to recommend irrigation actions based on historical data.
+   - Incorporated machine learning for actionable insights into water and nutrient management.
+
+## Features
+
+- **Predictive Modeling**: Advanced machine learning models built with Scikit-learn to predict irrigation needs.  
+- **Interactive Dashboard**: A user-friendly Streamlit app to visualize real-time data.  
+- **ESP32 Integration**: Seamless communication with field hardware for data collection and irrigation control.  
+- **Database Integration**: Enhanced PostgreSQL database for data persistence and efficient queries.  
 
 ## Installation
 
