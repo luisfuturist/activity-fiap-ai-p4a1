@@ -2,3 +2,6 @@
 *.tsv
 *.xls
 *.xlsx
+
+venv/
+__pycache__/

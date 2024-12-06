@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "fiap_p4a1",
+            "database": "fiap_p4a1",
+            "username": "fiap_p4a1",
+            "password": "fiap_p4a1"
+        }
+    ]
+}
