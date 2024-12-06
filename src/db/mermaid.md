@@ -36,13 +36,13 @@ erDiagram
         int id_area PK
         string area_name
         float size_hectares
-        string crop
         date planting_date
     }
 
     Harvest {
         int id_harvest PK
         int id_area FK
+        string crop
         date planting_date
         date harvest_date
         date emergence_date

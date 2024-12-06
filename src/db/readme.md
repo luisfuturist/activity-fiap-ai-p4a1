@@ -139,7 +139,6 @@ A tabela **`Planting_Area`** representa as áreas de plantio.
 - `id_area` (PK): Identificador único da área de plantio
 - `area_name`: Nome da área
 - `size_hectares`: Tamanho da área em hectares
-- `crop`: Tipo de cultura
 - `planting_date`: Data de plantio
 
 **Relacionamentos:**
@@ -151,12 +150,13 @@ A tabela **`Planting_Area`** representa as áreas de plantio.
 
 ---
 
-### **2. `Harvest`**
+### **2. `Harvest`******
 A tabela **`Harvest`** armazena informações sobre colheitas.
 
 **Atributos:**
 - `id_harvest` (PK): Identificador único da colheita
 - `id_area` (FK): Referência à área de plantio
+- `crop`: Tipo de cultura
 - `planting_date`: Data de plantio
 - `harvest_date`: Data de colheita
 - `emergence_date`: Data de emergência
@@ -271,7 +271,7 @@ A tabela **`Irrigation_History`** registra o histórico de irrigações.
 
 
 ## **Diagrama Entidade-Relacionamento (DER)**
-![DER](../assets/DER.png)
+![DER](../../assets/DER.png)
 
 
 ## Exemplo de Operações CRUD
@@ -314,8 +314,8 @@ try:
     all_areas = get_all_planting_areas()
     print(f"Todas as áreas de plantio: {all_areas}")
 
-    # Atualizando apenas o campo 'crop'
-    updated_area = update_planting_area(new_area.id_area, {"crop": "Cevada"})
+    # Atualizando apenas o campo 'area_name'
+    updated_area = update_planting_area(new_area.id_area, {"area_name": "Sector C"})
     print(f"Área de plantio atualizada: {updated_area}")
 
     deleted = delete_planting_area(new_area.id_area)

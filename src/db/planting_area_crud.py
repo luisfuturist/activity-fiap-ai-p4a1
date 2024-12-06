@@ -8,12 +8,11 @@ import datetime
 class PlantingAreaUpdate(TypedDict, total=False):  # total=False allows partial updates
     area_name: str
     size_hectares: float
-    crop: str
     planting_date: datetime.date
 
 
 def create_planting_area(
-    area_name: str, size_hectares: float, crop: str, planting_date: str
+    area_name: str, size_hectares: float, planting_date: str
 ):
     """Creates a new PlantingArea entry."""
     with get_db() as db:
@@ -21,7 +20,6 @@ def create_planting_area(
             new_area = PlantingArea(
                 area_name=area_name,
                 size_hectares=size_hectares,
-                crop=crop,
                 planting_date=datetime.datetime.strptime(
                     planting_date, "%Y-%m-%d"
                 ).date(),
@@ -91,7 +89,7 @@ if __name__ == "__main__":
     all_areas = get_all_planting_areas()
     print(f"All Planting Areas: {all_areas}")
 
-    updated_area = update_planting_area(new_area.id_area, {"crop": "Barley"})
+    updated_area = update_planting_area(new_area.id_area, {"area_name": "Sector C"})
     print(f"Updated Planting Area: {updated_area}")
 
     # deleted = delete_planting_area(new_area.id_area)
