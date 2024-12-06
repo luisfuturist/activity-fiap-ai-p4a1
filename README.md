@@ -88,6 +88,11 @@ cd activity-fiap-ai-p4a1/
    pip install -r requirements.txt
    ```
 
+4. **Populate database**:
+   ```bash
+   python scripts/init-db.py
+   ```
+
 ## Running the Solutions
 
 ### 1. **Application**  
