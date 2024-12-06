@@ -1,86 +1,95 @@
-# FIAP - Faculdade de Informática e Administração Paulista
+# activity-fiap-ai-p4a1
 
-<p align="center">
-<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
-</p>
+> **Note:**  
+> This project is part of the **Artificial Intelligence** course at [FIAP](https://github.com/fiap) - Online 2024. It is the "**Phase 4** Activity Chapter 1 - Automation and intelligence in the FarmTech solution."
 
-<br>
+## Overview
 
-## Objective
+### Objective
 
 Develop an enhanced FarmTech solution by integrating predictive intelligence and real-time monitoring to optimize irrigation and nutrient management. Leverage Scikit-learn for predictive modeling, Streamlit for visualization, and ESP32 for field hardware integration.
 
-## Deliverables
-- Optimized C/C++ code for ESP32.
-- Python code with Scikit-learn and Streamlit integration.
-- Screenshots and detailed documentation in the README.
-- Demonstrative video published and linked in the GitHub repository.
+### Features
 
-## Tasks
+//TODO
+
+## Installation
+
+Before proceeding, ensure the following prerequisites are installed on your system:
+
+- [Git](https://git-scm.com/downloads)
+- [Docker](https://docs.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose)
+
+Additional tools for setup:
+
+- [VS Code](https://code.visualstudio.com/download)
+- [Python 3.x](https://www.python.org/)
+
+Consider installing these VS Code extensions:
+
+- [SQLTools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools) (optional)
+  - [SQLTools PostgreSQL Driver](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools-driver-pg)
+
+To clone the repository to your local machine:
+
+```sh
+git clone https://github.com/luisfuturist/activity-fiap-ai-p4a1.git
+cd activity-fiap-ai-p4a3/
+```
+
+## Setup
+
+1. **Database Setup (PostgreSQL)**:
+   - Start the database:
+    ```bash
+    docker compose up -d
+    ```
+    - Stop the database:
+    ```bash
+    docker compose down
+    ```
+
+2. **Create and Activate Virtual Environment**:
+   ```sh
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Solutions
+
+1. **Running the app**:
+   - Start the interface with:
+     ```bash
+     streamlit run src/streamlit_app.py
+     ```
+
+2. **ESP32**:
+   - Project link on Wokwi: [Wokwi Project](https://wokwi.com/projects/415998871219053569)
+   - Access the code in the `Platformio/` folder.
+
+## Project Management
 
 Access the [GitHub Project](https://github.com/users/luisfuturist/projects/4).
 
-# Nome do projeto
+## Members (Group 60)
 
-## Nome do grupo
+- [Amandha Nery](https://www.linkedin.com/in/amandhanery/) (RM560030)
+- [Bruno Conterato](https://www.linkedin.com/in/brunoconterato/) (RM561048)
+- Gustavo Castro (RM560831)
+- [Kild Fernandes](https://www.linkedin.com/in/kild-fernandes/) (RM560615)
+- [Luis Emidio](https://www.linkedin.com/in/luisfuturist/) (RM559976)
 
-## 👨‍🎓 Integrantes: 
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do integrante 1</a>
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do integrante 2</a>
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do integrante 3</a> 
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do integrante 4</a> 
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do integrante 5</a>
+## Professors
 
-## 👩‍🏫 Professores:
-### Tutor(a) 
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do Tutor</a>
-### Coordenador(a)
-- <a href="https://www.linkedin.com/company/inova-fusca">Nome do Coordenador</a>
+- **Tutor**: [Lucas Gomes Moreira](https://www.linkedin.com/in/lucas-gomes-moreira-15a8452a/)
+- **Coordinator**: [André Godoi](https://www.linkedin.com/in/profandregodoi/)
 
+## License
 
-## 📜 Descrição
-
-*Descreva seu projeto com base no texto do PBL (até 600 palavras)*
-
-
-## 📁 Estrutura de pastas
-
-Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
-
-- <b>.github</b>: Nesta pasta ficarão os arquivos de configuração específicos do GitHub que ajudam a gerenciar e automatizar processos no repositório.
-
-- <b>assets</b>: aqui estão os arquivos relacionados a elementos não-estruturados deste repositório, como imagens.
-
-- <b>config</b>: Posicione aqui arquivos de configuração que são usados para definir parâmetros e ajustes do projeto.
-
-- <b>document</b>: aqui estão todos os documentos do projeto que as atividades poderão pedir. Na subpasta "other", adicione documentos complementares e menos importantes.
-
-- <b>scripts</b>: Posicione aqui scripts auxiliares para tarefas específicas do seu projeto. Exemplo: deploy, migrações de banco de dados, backups.
-
-- <b>src</b>: Todo o código fonte criado para o desenvolvimento do projeto ao longo das 7 fases.
-
-- <b>README.md</b>: arquivo que serve como guia e explicação geral sobre o projeto (o mesmo que você está lendo agora).
-
-## 🔧 Como executar o código
-
-*Acrescentar as informações necessárias sobre pré-requisitos (IDEs, serviços, bibliotecas etc.) e instalação básica do projeto, descrevendo eventuais versões utilizadas. Colocar um passo a passo de como o leitor pode baixar o seu código e executá-lo a partir de sua máquina ou seu repositório. Considere a explicação organizada em fase.*
-
-
-## 🗃 Histórico de lançamentos
-
-* 0.5.0 - XX/XX/2024
-    * 
-* 0.4.0 - XX/XX/2024
-    * 
-* 0.3.0 - XX/XX/2024
-    * 
-* 0.2.0 - XX/XX/2024
-    * 
-* 0.1.0 - XX/XX/2024
-    *
-
-## 📋 Licença
-
-<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
-
-
+This project is licensed under the [Creative Commons Attribution 4.0 International](http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1).
