@@ -6,6 +6,7 @@ import re
 import time
 from filelock import FileLock
 import os
+from mqtt_utilis import activate_irrigation
 
 
 def main():
@@ -102,8 +103,17 @@ def show_content(choice):
         area = st.selectbox("Selecione a área", area)
         duracao = st.slider("Duração (minutos)", 10, 200, 30)
         if st.button("Ativar Irrigação"):
-            st.success(f"Irrigação ativada na {area} por {duracao} minutos")
-
+            try:
+                result = activate_irrigation("chanel/1")
+                if result:
+                    if "Failed" in result:
+                        st.error(f"Falha na ativação da irrigação: {result}")
+                    else:
+                        st.success(f"Irrigação ativada na {area} por {duracao} minutos")
+                else:
+                        st.warning("A ativação da irrigação não retornou nenhum resultado.")
+            except Exception as e:
+                st.error(f"Ocorreu um erro ao tentar ativar a irrigação: {str(e)}")            
     elif choice == "Painel de dados":
         
         # Função para carregar os dados
