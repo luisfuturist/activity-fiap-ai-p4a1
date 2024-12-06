@@ -7,7 +7,7 @@ import time
 from filelock import FileLock
 import os
 from mqtt_utilis import activate_irrigation
-
+from db.planting_area_crud import create_planting_area
 
 def main():
     st.title("Bem vindo ao FarmSettings")
@@ -47,12 +47,12 @@ def show_content(choice):
         
         area_name = cadastrar_nome_area()
         area = st.number_input("Tamanho em hectares", min_value=1, step=100, value=None)
-        crop = st.text_input("Cultura")
+        # crop = st.text_input("Cultura")
         planting_date = st.date_input("Data de plantio", max_value=datetime.now().date(),value=None)     
         phenological_stage = st.selectbox("Estádio fenológico", estadios)
 
         if st.button("Cadastrar"):
-        # Validações
+            # Validações
             empty_field = False
             if area_name is None or not area_name.strip():
                 st.warning("Por favor, insira o nome da área.")
@@ -60,19 +60,22 @@ def show_content(choice):
             elif area is None:
                 st.warning("Por favor, insira um valor válido para a tamanho em hectares.")
                 empty_field = True
-            elif area_name is None or not crop.strip():
-                st.warning("Por favor, insira o nome da cultura.")
-                empty_field = True
+            # elif area_name is None or not crop.strip():
+            #     st.warning("Por favor, insira o nome da cultura.")
+            #     empty_field = True
 
             if not empty_field:
-                st.success(f"Área '{area_name}' cadastrada com sucesso!")
-                st.write(f"Tamanho: {area} hectares")
-                st.write(f"Cultura: {crop}")
-                 # Exibindo campos opcionais apenas se foram preenchidos
-                if planting_date is not None:
-                    st.write(f"Data de plantio: {planting_date}")
-                if phenological_stage is not None:
-                    st.write(f"Estádio fenológico: {phenological_stage}")
+
+                try:
+                    new_area = create_planting_area(
+                        area_name=area_name,
+                        size_hectares=area,
+                        planting_date=planting_date.strftime("%Y-%m-%d"),
+                    )
+                    st.success(f"Área '{new_area.area_name}' cadastrada com sucesso!")
+                except Exception as e:
+                    st.error(f"Ocorreu um erro ao cadastrar a área. Tente novamente mais tarde.")
+                    print(e)
 
     elif choice == "Alterar área":
         st.header("Alterar área")
@@ -91,7 +94,7 @@ def show_content(choice):
                     st.success(f"Nome da área alterado para quantidade {area_name}")
                 elif planting_date is not None:
                     st.write(f"Data de plantio: {planting_date}")
-                elif phenological_stage is not "":
+                elif phenological_stage != "":
                     st.write(f"Estádio fenológico: {phenological_stage}")
                 else: 
                     st.error("Altere algum campo.")

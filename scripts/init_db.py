@@ -26,13 +26,11 @@ def populate_db():
                 PlantingArea(
                     area_name="Sector A",
                     size_hectares=10.5,
-                    crop="Corn",
                     planting_date="2024-01-15",
                 ),
                 PlantingArea(
                     area_name="Sector B",
                     size_hectares=8.2,
-                    crop="Soybean",
                     planting_date="2024-02-01",
                 ),
             ]
@@ -41,6 +39,7 @@ def populate_db():
             harvests = [
                 Harvest(
                     id_area=1,
+                    crop="Corn",
                     planting_date="2024-07-15",
                     emergence_date="2024-03-10",
                     phenological_stage="R6",
@@ -48,6 +47,7 @@ def populate_db():
                 ),
                 Harvest(
                     id_area=2,
+                    crop="Soybean",
                     planting_date="2024-08-20",
                     emergence_date="2024-03-25",
                     phenological_stage="R6",
