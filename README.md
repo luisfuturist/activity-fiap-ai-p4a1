@@ -90,7 +90,7 @@ cd activity-fiap-ai-p4a1/
 
 4. **Populate database**:
    ```bash
-   python scripts/init-db.py
+   python scripts/init_db.py
    ```
 
 ## Running the Solutions
