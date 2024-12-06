@@ -17,8 +17,8 @@ def activate_irrigation(channel, broker=MQTT_BROKER, port=MQTT_PORT, username=MQ
             print(f"Connected successfully to MQTT broker with result code {rc}")
             # Publish the irrigation activation message
             message = json.dumps({"irrigation": True})
-            client.publish(f"{channel}/irrigation", message)
-            result_message = f"Irrigation activation message sent to {channel}/irrigation"
+            client.publish(f"irrigation/{channel}", message)
+            result_message = f"Irrigation activation message sent to {channel}"
         else:
             result_message = f"Failed to connect, return code {rc}"
 

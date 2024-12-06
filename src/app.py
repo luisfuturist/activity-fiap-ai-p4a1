@@ -7,7 +7,7 @@ import os
 from filelock import FileLock
 
 # Global DataFrame to store MQTT messages
-mqtt_data = pd.DataFrame(columns=["chanel", "soilMoisture", "nutrientLevel", "temperature", "humidity", "irigation", "timestamp"])
+mqtt_data = pd.DataFrame(columns=["chanel", "potassiumPercent", "phosphorusPercent", "temperature", "humidity", "irrigation", "timestamp"])
 
 # MQTT Credentials
 MQTT_BROKER = "759d2f782c6f48d68eafab33492641f8.s1.eu.hivemq.cloud"
