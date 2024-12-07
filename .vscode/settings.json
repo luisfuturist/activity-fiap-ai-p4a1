@@ -1,0 +1,25 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "fiap_p4a1",
+            "database": "fiap_p4a1",
+            "username": "fiap_p4a1",
+            "password": "fiap_p4a1"
+        }
+    ],
+    "files.exclude": {
+        "**/venv": true,
+        "**/__pycache__": true,
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+      ".env.example": ".env",
+      ".gitignore": ".gitattributes",
+      "docker-compose.yaml": "requirements.txt"
+    }
+}
