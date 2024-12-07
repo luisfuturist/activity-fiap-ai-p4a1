@@ -8,6 +8,20 @@ from filelock import FileLock
 import os
 from mqtt_utilis import activate_irrigation
 from db.planting_area_crud import create_planting_area
+from db.planting_area_crud import get_all_planting_areas
+
+import pandas as pd
+from db.planting_area_crud import get_all_planting_areas
+planting_areas = get_all_planting_areas()
+data = [{
+    'id_area': area.id_area,
+    'area_name': area.area_name,
+    'size_hectares': area.size_hectares,
+    'planting_date': area.planting_date
+} for area in planting_areas]
+
+df = pd.DataFrame(data)
+#area = df['area_name'].tolist()
 
 def main():
     st.title("Bem vindo ao FarmSettings")
@@ -28,6 +42,9 @@ def validade_string(string, string_len = 4):
         return False
     return True
 
+planting_areas = get_all_planting_areas()
+df = pd.DataFrame(planting_areas)
+
 def cadastrar_nome_area(value_input=None):
         area_name = st.text_input("Nome da área", value=value_input)
            # Validação do nome da área
@@ -38,7 +55,7 @@ def cadastrar_nome_area(value_input=None):
                 return area_name
 
 def show_content(choice):
-    area = ["", "Área 1", "Área 2", "Área 3"] 
+    area = ["", 'Sector A', 'Sector B', 'talhao 25'] 
     estadios = ["", "Germinação", "Desenvolvimento vegetativo", "Floração", "Frutificação", "Maturação"]
 
     if choice == "Cadastrar área":
@@ -107,7 +124,7 @@ def show_content(choice):
         duracao = st.slider("Duração (minutos)", 10, 200, 30)
         if st.button("Ativar Irrigação"):
             try:
-                result = activate_irrigation("chanel/1")
+                result = activate_irrigation("c0")
                 if result:
                     if "Failed" in result:
                         st.error(f"Falha na ativação da irrigação: {result}")
