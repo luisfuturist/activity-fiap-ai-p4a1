@@ -7,8 +7,8 @@ This repository contains a solution for optimizing irrigation and nutrient manag
 
 ## Features
 
-- **Database**: PostgreSQL for efficient data storage and querying.  
-- **Interactive Dashboard**: Real-time data visualization with Streamlit.  
+- **Database**: PostgreSQL for efficient data storage and querying. For more information, access [Database](document/other/database.md).
+- **Interactive Dashboard**: Real-time data visualization with Streamlit. For more details, read [Streamlit](document/other/streamlit.md).
 - **ESP32 Integration**: Communication with field hardware for data collection and irrigation control. For further information, check [ESP32](document/other/esp32.md).
 - **Predictive Modeling**: Machine learning models using Scikit-learn for irrigation recommendations. For more information, access [ML Training](document/other/ml_training.md).
 

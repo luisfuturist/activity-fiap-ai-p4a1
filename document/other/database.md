@@ -1,79 +1,6 @@
-# FarmTech Database Setup
+# Database
 
 Este projeto utiliza **Python**, **PostgreSQL** e **SQLAlchemy** para gerenciar a base de dados de monitoramento agrícola. Siga as instruções abaixo para configurar o ambiente e inicializar o banco de dados.
-
----
-
-## **Índice**
-- [Pré-requisitos](#pré-requisitos)
-- [Passo 1: Criar e Ativar um Ambiente Virtual](#passo-1-criar-e-ativar-um-ambiente-virtual)
-- [Passo 2: Instalar Dependências](#passo-2-instalar-dependências)
-- [Passo 3: Configurar e Inicializar o Banco de Dados](#passo-3-configurar-e-inicializar-o-banco-de-dados)
-- [Passo 4: Inicializar o Banco de Dados](#passo-4-inicializar-o-banco-de-dados)
-- [Modelagem Entidade-Relacionamento (MER)](#modelagem-entidade-relacionamento-mer)
-- [Problemas Comuns](#problemas-comuns)
-- [Contribuindo](#contribuindo)
-- [Licença](#licença)
-
----
-
-## **Pré-requisitos**
-
-1. **Python 3.8 ou superior**  
-   Certifique-se de que o Python está instalado em sua máquina. [Baixe aqui](https://www.python.org/downloads/).
-
-2. **PostgreSQL**  
-   Instale o PostgreSQL em sua máquina. [Instruções de instalação](https://www.postgresql.org/download/).
-
-3. **Pip**  
-   O `pip` é o gerenciador de pacotes do Python. Ele vem instalado com o Python, mas você pode atualizá-lo com:
-   ```bash
-   python -m pip install --upgrade pip
-   ```
-
----
-
-## **Passo 1: Criar e Ativar um Ambiente Virtual**
-
-O ambiente virtual (**venv**) isola as dependências do projeto, evitando conflitos com outras aplicações.
-
-### **Criar o ambiente virtual**
-```bash
-python -m venv venv
-```
-
-### **Ativar o ambiente virtual**
-- **Windows**:
-  ```bash
-  venv\Scripts\activate
-  ```
-- **Linux/Mac**:
-  ```bash
-  source venv/bin/activate
-  ```
-
-Se ativado com sucesso, o terminal mostrará o nome do ambiente virtual antes do prompt:
-```bash
-(venv) $
-```
-
----
-
-## **Passo 2: Instalar Dependências**
-
-Com o ambiente virtual ativado, instale as dependências do projeto listadas no arquivo `requirements.txt`.
-
-### **Instalar as dependências**
-```bash
-pip install -r requirements.txt
-```
-
-### **Arquivo `requirements.txt`**
-Certifique-se de que o arquivo contém as bibliotecas necessárias:
-```
-psycopg2-binary
-sqlalchemy
-```
 
 ---
 
@@ -273,7 +200,6 @@ A tabela **`Irrigation_History`** registra o histórico de irrigações.
 ## **Diagrama Entidade-Relacionamento (DER)**
 ![DER](../../assets/DER.png)
 
-
 ## Exemplo de Operações CRUD
 
 Esta seção demonstra o uso das operações CRUD definidas em `planting_area_crud.py`.  Estas funções agora acessam a sessão de banco de dados diretamente através do arquivo `database_session.py`, simplificando seu uso. A função `update_planting_area` agora utiliza `typing.TypedDict` para tipagem, melhorando a autocompletação no VS Code sem a necessidade de validação em tempo de execução do Pydantic.
@@ -340,9 +266,3 @@ Certifique-se de estar usando a versão correta do Python e o caminho correto pa
 
 ### **Erro ao conectar ao PostgreSQL**
 Verifique se o PostgreSQL está em execução e se o host, usuário e senha estão configurados corretamente no script Python.
-
----
-
-## **Contribuindo**
-
-Sinta-se à vontade para contribuir com melhorias ou reportar problemas. 
