@@ -97,3 +97,4 @@ Os modelos treinados serão integrados à aplicação FarmTech Solutions, utiliz
 
 Os modelos treinados foram salvos utilizando a função `save_trained_model`. Esta função atualmente salva apenas as informações meta (nome, tipo, parâmetros, métricas) dos modelos em um banco de dados (a função `create_ml_model` foi assumida como existente). O próprio modelo treinado é salvo em um arquivo pickle, mas essa funcionalidade está comentada no código.  A recuperação dos modelos para uso subsequente necessita de implementação adicional.
 
+**Observação:** Nesta fase, os modelos foram treinados e avaliados.  No entanto, a integração dos modelos com o sistema de irrigação para controlar a ativação da irrigação **não foi implementada**.  Esta integração será realizada em etapas posteriores do projeto.
