@@ -16,13 +16,6 @@ const char* mux_channels[] = {
     "chanel/c12", "chanel/c13", "chanel/c14", "chanel/c15"
 };
 
-const char* irrigation_channels[] = {
-    "irrigation/c0", "irrigation/c1", "irrigation/c2", "irrigation/c3",
-    "irrigation/c4", "irrigation/c5", "irrigation/c6", "irrigation/c7",
-    "irrigation/c8", "irrigation/c9", "irrigation/c10", "irrigation/c11",
-    "irrigation/c12", "irrigation/c13", "irrigation/c14", "irrigation/c15"
-};
-
 const char* topics[] = { "led/c0", "led/c1", "led/c2", "led/c3" };
 bool channelStates[4] = {false, false, false, false}; // Tracks the state of each channel
 bool LEDS_STATES[4] = {true, true, true, true}; // Tracks the state of each channel
@@ -78,7 +71,6 @@ void loop() {
 
   unsigned long currentMillis = millis();
   if (currentMillis - lastReadTime >= readInterval) {
-    //sendInvertedChannelStates();
     lastReadTime = currentMillis;
 
     // Read and publish data for all sensors
@@ -125,26 +117,6 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   }
   if (!topicMatched) {
     Serial.println("Received message on unknown topic.");
-  }
-}
-
-void sendInvertedChannelStates() {
-  for (uint8_t i = 0; i < 4; i++) {
-    // Invert the current state
-    LEDS_STATES[i] = !channelStates[i];
-
-    // Create a JSON payload to publish
-    DynamicJsonDocument doc(64);
-    doc["state"] = LEDS_STATES[i] ? "OFF" : "ON"; // Send "OFF" for true and "ON" for false
-
-    // Serialize JSON to a string
-    char jsonBuffer[64];
-    serializeJson(doc, jsonBuffer);
-
-    // Publish to the corresponding topic
-    if (client.publish(irrigation_channels[i], jsonBuffer)) {
-      Serial.printf("Send state of channel %d to topic %s\n", i, topics[i]);
-    }
   }
 }
 
