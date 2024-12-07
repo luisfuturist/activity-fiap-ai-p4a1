@@ -12,6 +12,10 @@ This repository contains a solution for optimizing irrigation and nutrient manag
 - **ESP32 Integration**: Communication with field hardware for data collection and irrigation control.  
 - **Predictive Modeling**: Machine learning models using Scikit-learn for irrigation recommendations.
 
+## Observations
+
+- AI Modeling is not integrated
+
 ### Key Improvements
 
 ### 1. **Database Enhancements**  
@@ -37,11 +41,12 @@ This repository contains a solution for optimizing irrigation and nutrient manag
 
 ## Demonstrations and Evidence
 
-### **Serial Plotter Integration**  
-Below are screenshots of the Serial Plotter showcasing variable tracking (e.g., soil moisture) in real time:
+### **Serial Plotter Integration**
 
-![Serial Plotter Example](path/to/serial_plotter_image.png)  
-*Description: The Serial Plotter graph shows changes in soil moisture over time, helping visualize irrigation needs.*
+Below is a screenshot of the Serial Plotter showcasing variable tracking (e.g., soil moisture) in real time:
+
+![Serial Plotter Example](assets/wokwi-serial-plotter.png)  
+*The image shows a simulated electronic circuit diagram with various interconnected components, including sensors, a microcontroller, an LCD display, and an array of graphical outputs below. Multiple temperature and humidity sensors are connected in parallel, feeding data into a ESP32 board, which appears to process and relay the information to the LCD screen. The graphical interface at the bottom displays time-series data for parameters such as temperature, humidity, potassium, and phosphorus levels. The chart includes colored lines representing trends for each parameter over time. Additionally, there is a live tooltip showing the current readings for temperature (-19.5°C), humidity (31%), potassium (47), and phosphorus (39), along with the time stamp "22:05:32."*
 
 ### **Video Demonstration**  
 A demonstration video showing the updated system in action is available on YouTube (unlisted): [Watch the Video](https://youtube.com/your-video-link)
@@ -101,7 +106,13 @@ cd activity-fiap-ai-p4a1/
    streamlit run src/streamlit_app.py
    ```
 
-### 2. **ESP32 Integration**  
+### 2. **MQTT Data Loading**  
+   Start the data loader for the application:
+   ```bash
+   streamlit run src/app.py
+   ```
+
+### 3. **ESP32 Integration**  
    - Access the Wokwi project: [Wokwi Project](https://wokwi.com/projects/415998871219053569)  
    - The ESP32 code is located in the `Platformio/` folder.  
    - Metrics are displayed on the LCD screen, and Serial Plotter monitors real-time variable changes.
