@@ -78,7 +78,7 @@ void loop() {
 
   unsigned long currentMillis = millis();
   if (currentMillis - lastReadTime >= readInterval) {
-    sendInvertedChannelStates();
+    //sendInvertedChannelStates();
     lastReadTime = currentMillis;
 
     // Read and publish data for all sensors
@@ -170,7 +170,9 @@ void readMux(int channel) {
   if (soilValue != 0.00 || nutrientValue != 0.00) {
     // Display values on LCD
     displayReadingsOnLCD(channel, soilValue, nutrientValue, temperature, humidity);
-    logToSerial(soilValue, nutrientValue, temperature, humidity);
+    if(channel == 0){
+        logToSerial(soilValue, nutrientValue, temperature, humidity);
+    }
 
     // Send values via MQTT
     EnviaValores(soilValue, nutrientValue, temperature, humidity, mux_channels[channel]);
@@ -187,19 +189,31 @@ void initializeLCD() {
   lcd.clear();
 }
 
-void EnviaValores(float potassiumPercent, float phosphorusPercent, float temperatura, float umidade, const char* topic) {
-  DynamicJsonDocument doc(256); // Use DynamicJsonDocument for simplicity
+void EnviaValores(float potassiumPercent, float phosphorusPercent, float temperature, float umidade, const char* topic) {
+    // Get the last character as the channel index
+    int lastChar = topic[strlen(topic) - 1] - '0'; // Convert ASCII digit to integer
 
-  doc["soilMoisture"] = potassiumPercent;
-  doc["nutrientLevel"] = phosphorusPercent;
-  doc["temperature"] = temperatura;
-  doc["humidity"] = umidade;
+    // Validate the channel index
+    if (lastChar < 0 || lastChar >= 15) {
+        Serial.printf("Invalid channel index from topic: %s\n", topic);
+        return;
+    }
 
-  char jsonBuffer[256];
-  serializeJson(doc, jsonBuffer);
+    // Toggle the state for the corresponding LED
+    LEDS_STATES[lastChar] = !channelStates[lastChar];
 
-  client.publish(topic, jsonBuffer);
-  
+    // Prepare JSON document
+    DynamicJsonDocument doc(256);
+    doc["potassiumPercent"] = potassiumPercent;
+    doc["phosphorusPercent"] = phosphorusPercent;
+    doc["temperature"] = temperature;
+    doc["humidity"] = umidade;
+    doc["state"] = LEDS_STATES[lastChar] ? "OFF" : "ON";
+
+    // Serialize and publish the JSON document
+    char jsonBuffer[256];
+    serializeJson(doc, jsonBuffer);
+    client.publish(topic, jsonBuffer);
 }
 
 void connectToWiFi() {
@@ -212,6 +226,7 @@ void connectToWiFi() {
     Serial.print(".");
   }
   Serial.println("\nConnected to Wi-Fi!");
+
 }
 
 void connectMQTT() {
@@ -239,9 +254,9 @@ uint8_t calculatePercent(uint16_t value) {
   return map(value, 0, 4095, 0, 100);
 }
 
-void logToSerial(float potassiumPercent, float phosphorusPercent, float temperatura, float umidade) {
+void logToSerial(float potassiumPercent, float phosphorusPercent, float temperature, float umidade) {
   Serial.print("Temp: ");
-  Serial.print(temperatura);
+  Serial.print(temperature);
   Serial.print(" Umid: ");
   Serial.print(umidade);
   Serial.print(" Potassium: ");
