@@ -12,10 +12,6 @@ This repository contains a solution for optimizing irrigation and nutrient manag
 - **ESP32 Integration**: Communication with field hardware for data collection and irrigation control. For further information, check [ESP32](document/other/esp32.md).
 - **Predictive Modeling**: Machine learning models using Scikit-learn for irrigation recommendations. For more information, access [ML Training](document/other/ml_training.md).
 
-## Observations
-
-- AI Modeling is not integrated
-
 ### Key Improvements
 
 ### 1. **Database Enhancements**  
